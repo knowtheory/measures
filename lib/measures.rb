@@ -1,3 +1,3 @@
 $KCODE = "UTF8" if $KCODE == "NONE"
 
-require 'measures/base'
+require 'lib/measures/measures'

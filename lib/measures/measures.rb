@@ -1,6 +1,7 @@
+require 'english/inflect'
 =begin
   Extend Numeric with the following abilities:
-    #cast_units(prefix=nil,units) which proxies to the appropriate class
+    #cast_units(modifier=nil,units) which proxies to the appropriate class
     #define_measures() which defines a series of methods 
 =end
 
@@ -16,8 +17,7 @@ module Measures
               "milli"   => -3, 
               "centi"   => -2, 
               "deci"    => -1, 
-              nil       => 0,   # i don't know whether this is potentially dangerous or not since 
-              "base"    => 0,   # it allows for passing nil as a valid arg in various places
+              "base"    => 0,
               "deca"    => 1,  
               "hecto"   => 2,  
               "kilo"    => 3,  
@@ -53,24 +53,21 @@ module Measures
               "Y"  => "yotta",
              }
   
-  # MAKE SURE TO CALL THIS METHOD FOR ALL YOUR UNIT CLASSES
-  # WHICH DESCEND FROM MEASURE
-  def add_prefix_methods
-    Measures::PREFIX_FULL.keys.compact.each do |prefix| 
-      define_method("#{prefix}#{@@unit}".to_sym){ general_conversion_to(prefix) }
-    end
-  end
+  PREFIX_FULL_REGEXP =        Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
+  PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 
   class Measure
     # OVERRIDE THESE WITH YOUR UNIT'S INFO
     @@unit = nil
-    @@unit_abbreviated = nil
-    def initialize(value,prefix=nil) # length should be able to define an order=1 parameter
-      raise ArgumentError, "Unit prefix must be nil or a valid SI prefix (#{Measures::PREFIX_FULL.keys.compact.join(",")})" unless Measures::PREFIX_FULL.keys.include? prefix
+    @@unit_aliases = [] 
+    @@measure = nil     # (i.e. :distance, mass, time) used for identifying classes that can be converted between each other.
+    
+    def initialize(value,modifier="base") # length should be able to define an order=1 parameter
+      raise ArgumentError, "Unit modifier must be nil or a valid SI prefix (#{Measures::PREFIX_FULL.keys.compact.join(",")})" unless Measures::PREFIX_FULL.keys.include? modifier
       raise ArgumentError, "value has to be a Numeric type (Integer,Float,Fixnum,Bignum). Really now, what'd you think it should be?" unless value.kind_of? Numeric
       
-      @value = value
-      @prefix = prefix
+      @value = value.to_f
+      @multiple_modifier = modifier
     end
     
     def to_s
@@ -81,8 +78,12 @@ module Measures
       @value
     end
     
-    def to_base
-      @value * 10**Measures::PREFIX_FULL[@prefix]
+    def ==(obj)
+      if self.class == obj.class
+        return self.to_base == obj.to_base
+      else
+        raise ArgumentError, "Compared object (#{obj}:#{obj.class}) must be the same class as what it's being compared to (#{self}:#{self.class})"
+      end
     end
     
     def +(addend)
@@ -90,7 +91,7 @@ module Measures
         raise ArgumentError, "Addend (#{addend.to_s}:#{addend.class}) must be the same class of object as our quantity (#{self.to_s}:#{self.class})"
       end
       
-      
+      @value += addend.convert_to(base)
     end
     
     def *(multiplier)
@@ -99,22 +100,54 @@ module Measures
 #        raise ArgumentError, "Multiplier (#{multiplier.to_s}:#{multiplier.class}) must either be the same class as multiplicand (#{self.to_s}:#{self.class}) or a Numeric type (Integer/Float/Fixnum/Bignum)"
       end
       
-      coerce_to_floate = self.magnitude
       if multiplier.kind_of? Numeric
         new_value = self.to_base * multiplier
       else
         new_value = self.to_base * multiplier.to_base
       end
     end
+
+    # returns a new object w/ value set to base measure
+    def to_base
+      self.class.new(@value * 10**Measures::PREFIX_FULL[@multiple_modifier])
+    end
+    
+    def convert_to(target)
+      si_convert_to(target)
+    end
     
     # Here's where the magic takes place
-    def general_conversion_to(new_prefix)
-      raise ArgumentError, "New unit prefix must be a valid SI prefix (#{Measures::PREFIX_FULL.keys.compact.join(",")})" unless Measures::PREFIX_FULL.keys.include? new_prefix
-      prefix_order_of_magnitude = Measures::PREFIX_FULL[@prefix]
-      new_order_of_magnitude    = Measures::PREFIX_FULL[new_prefix]
+    def si_convert_to(new_modifier)
+      raise ArgumentError, "New unit modifier must be a valid SI prefix (#{Measures::PREFIX_FULL.keys.compact.join(",")})" unless Measures::PREFIX_FULL.keys.include? new_modifier
+      modifier_order_of_magnitude = Measures::PREFIX_FULL[@multiple_modifier]
+      new_order_of_magnitude    = Measures::PREFIX_FULL[new_modifier]
 
-      power_conversion = prefix_order_of_magnitude - new_order_of_magnitude
-      @value * 10**power_conversion
+      power_conversion = modifier_order_of_magnitude - new_order_of_magnitude
+      new_value = @value * 10**power_conversion
+      self.class.new(new_value,new_modifier)
     end
-  end
+    
+    # This is some of where the magic takes place.
+    # Descendent classes of Measure will have a set of methods added to them
+    # so that users will be able to do standard base-10 unit conversion.
+    def self.inherited(subclass)
+      Measures::PREFIX_FULL.keys.compact.each do |modifier|
+        subclass.class_eval <<-evalblock
+          def #{modifier}#{subclass.to_s.plural.downcase}
+            si_convert_to("#{modifier}")
+          end
+        evalblock
+      end
+    end
+=begin
+require 'lib/measures'
+class Metre < Measures::Measure
+  @@unit = "Metre"
+  @@measure = "distance"
+  @@unit_aliases = ["meter", "m"]
 end
+Metre.new(4,"kilo").centimetres
+Metre.new(4,"kilo").methods
+=end
+  end
+end # module
