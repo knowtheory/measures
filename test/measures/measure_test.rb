@@ -1,30 +1,41 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MeasureTest < Test::Unit::TestCase
-  # def setup
-  # end
-
-  # def teardown
-  # end
+  def setup
+    @measure = Measures::Measure.new(4,"kilo")
+  end
 
   def test_abstract_measure_class
-    assert @measure = Measures::Measure.new(4)
+    assert Measures::Measure.new(4)
+    assert Measures::Measure.new(4,"base")
+    assert Measures::Measure.new(4,"kilo")
+  end
+
+  def test_comparison_of_compatible_measures
+    assert @m1 = Measures::Measure.new(48,"base","metre","distance")
+    assert @m2 = Measures::Measure.new(4800,"centi","metre","distance")
+    assert @m3 = Measures::Measure.new(800,"centi","metre","distance")
+    assert @m1.compatible?(@m1)
+    assert @m1.compatible?(@m2)
+    assert @m2.compatible?(@m1)
+    assert @m1.compatible?(@m3)
+    assert @m2.compatible?(@m3)
+    assert @m3.compatible?(@m1)
+    assert @m3.compatible?(@m2)
   end
   
-  def test_abstract_measure_class_with_prefix
-    assert @measure = Measures::Measure.new(4,"kilo")
-    assert_equal 4000, @measure.to_base.instance_variable_get("@value")
+  def test_comparison_of_incompatible_measures
+    
+  end
+
+  def test_arithmetic_on_measures
+    
   end
   
-  def test_abstract_measure_class_prefix_conversion
-    test_abstract_measure_class_with_prefix
-    assert_equal 400, @measure.convert_to("deca").instance_variable_get("@value")
+  def test_multiplication_of_measures
   end
   
-  def test_abstract_measure_class_prefix_conversion_is_chainable
-    test_abstract_measure_class_with_prefix
-    assert_equal 4, @measure.convert_to("deca").convert_to("kilo").instance_variable_get("@value")
+  def test_division_of_measures
   end
-  
-  
+
 end

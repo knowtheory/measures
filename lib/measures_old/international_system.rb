@@ -8,6 +8,13 @@ module InternationalSystem
     :current            => "Ampere",
     :quantity           => "Mole",
     :luminous_intensity => "Candela",
+    
+    # compound SI measures
+    :area               => "Square Metre",
+    :volume             => "Cubic Metre",
+    :velocity           => "Metre per Second"
+    :acceleration       => "Metre per Second Squared"
+    :volumetric_flow    => "Cubic Metre per Second"
 
     # derived SI measures
     :angle              => "Radian",
