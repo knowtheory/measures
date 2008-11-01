@@ -52,50 +52,84 @@ module Measures
   PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 
   MEASURE_MAP = {
-    :velocity               => "distance/duration",
-    :accelleration          => "distance/duration^2",
-    :jerk                   => "distance/duration^3",
-    :snap                   => "distance/duration^4",
-    :crackle                => "distance/duration^5",
-    :pop                    => "distance/duration^6",
-    :area                   => "distance^2",
-    :volume                 => "distance^3",
-    :volumetric_flow        => "volume/duration",
-    :angular_velocity       => "angle/duration",
-    :momentum               => "force*duration",
-    :angular_momentum       => "force*distance*duration",
-    :torque                 => "force*distance",
-    :density                => "mass/volume",
-    :wave_number            => "distance^-1",
-    :specific_volume        => "distance^3/mass",
-    :molar_concentration    => "mole/volume",
-    :molar_volume           => "volume/mole",
-    :heat_capacity          => "energy/temperature",
-    :molar_heat_capacity    => "energy/temperature/mole",
-    :specific_heat_capacity => "energy/temperature/mass",
-    :molar_energy           => "energy/mole",
-    :specific_energy        => "energy/mass",
-    :energy_density         => "energy/volume",
-    :surface_tension        => "force/distance",
-    :irradiance             => "power/area",
-    :thermal_conductivity   => "power/distance/temperature",
-    :kinematic_viscosity    => "area/duration",
-    :dynamic_viscosity      => "pressure*duration",
-=begin
-    :electric_charge_density  => ,
-    :electric_current_density => ,
-    :conductivity             => ,
-    :molar_conductivity       => ,
-    :permittivity             => ,
-    :permeability             => ,
-    :electric_field_strength  => ,
-    :magnetic_field_strength  => ,
-    :luminance                => ,
-    :absorbed_dose_rate       => ,
-=end    
-    :resistivity            => "resistance/distance"
-
-    
+    # measure of              # description/derivation              # unit derivation in SI
+    :frequency                => "duration^-1",                     # => 1/s
+    :angle                    => "",                                # => m/m
+    :solid_angle              => "",                                # => m^2/m^2
+    :force                    => "mass*accelleration",              # => m*kg/s^2
+      :weight                 => "force",
+    :pressure                 => "force/area",                      # => N/m^2
+      :stress                 => "pressure",
+    :energy                   => "force*distance",                  # => N*m
+      :work                   => "energy",
+      :heat                   => "energy",
+    :electric_field_strength  => "force/charge",                    # => N/C or voltage/distance (V/m)
+    :power                    => "energy/duration",                 # => J/s or voltage*current (V*A)
+      :radiant_flux           => "power",
+    :charge                   => "duration*current",                # => s*A
+      :electrical_charge      => "charge",
+      :electrical_flux        => "charge",
+    :voltage                  => "energy/charge",                   # => W/A or energy/charge (J/C)
+      :electrical_potential_difference => "voltage",
+      :electromotive_force    => "voltage",
+    :capacitance              => "charge/voltage",                  # => C/V
+      :electrical_capacitance => "capacitance",
+    :resistance               => "voltage/current",                 # => V/A
+      :electric_resistance    => "resistance",
+      :impedance              => "resistance",
+      :reactance              => "resistance",
+    :conductance              => "resistance^-1",                   # => 1/Ω
+      :electrical_conductance => "conductance"
+    :magnetic_flux            => "energy/current",                  # => J/A
+    :magnetic_field           => "voltage*duration/area",           # => V*s/m^2 = Wb/m^2 = N/(A*m)
+    :inductance               => "voltage*duration/current",        # => V*s/A = Wb/A
+    :luminous_flux            => "luminous_intensity*solid_angle",  # => cd*sr
+    :illuminance              => "luminous_flux/area",              # => lm/m^2
+    :radioactivity            => "duration^-1",                     # => 1/s
+    :absorbed_dose            => "energy/mass",                     # => J/kg
+    :equivalent_dose          => "energy/mass",                     # => J/kg
+    :catalytic_activity       => "mole/duration",                   # => mol/s
+    :velocity                 => "distance/duration",               # => 
+    :accelleration            => "distance/duration^2",             # => 
+    :jerk                     => "distance/duration^3",             # => 
+    :snap                     => "distance/duration^4",             # => 
+    :crackle                  => "distance/duration^5",             # => 
+    :pop                      => "distance/duration^6",             # => 
+    :area                     => "distance^2",                      # => 
+    :volume                   => "distance^3",                      # => 
+    :volumetric_flow          => "volume/duration",                 # => 
+    :angular_velocity         => "angle/duration",                  # => 
+    :momentum                 => "force*duration",                  # => 
+    :angular_momentum         => "force*distance*duration",         # => 
+    :torque                   => "force*distance",                  # => 
+    :density                  => "mass/volume",                     # => 
+    :wave_number              => "distance^-1",                     # => 
+    :specific_volume          => "distance^3/mass",                 # => 
+    :molar_concentration      => "mole/volume",                     # => 
+    :molar_volume             => "volume/mole",                     # => 
+    :heat_capacity            => "energy/temperature",              # => 
+    :molar_heat_capacity      => "energy/temperature/mole",         # => 
+    :specific_heat_capacity   => "energy/temperature/mass",         # => 
+    :molar_energy             => "energy/mole",                     # => 
+    :specific_energy          => "energy/mass",                     # => 
+    :energy_density           => "energy/volume",                   # => 
+    :surface_tension          => "force/distance",                  # => 
+    :irradiance               => "power/area",                      # => 
+    :thermal_conductivity     => "power/distance/temperature",      # => 
+    :kinematic_viscosity      => "area/duration",                   # => 
+    :dynamic_viscosity        => "pressure*duration",               # => 
+    :electric_charge_density  => "charge/volume",                   # => 
+    :electric_current_density => "current/volume",                  # => 
+    :conductivity             => "conductance/distance",            # => 
+    :molar_conductivity       => "conductance*area/mole",           # => 
+    :permittivity             => "capacitance/distance",            # => 
+    :permeability             => "inductance/distance",             # => 
+    :electric_field_strength  => "voltage/distance",                # => 
+    :magnetic_field_strength  => "current/distance",                # => 
+    :luminance                => "luminous_intensity/area",         # => 
+    :ray_exposure             => "charge/mass"                      # => 
+    :absorbed_dose_rate       => "absorbed_dose/duration",          # => 
+    :resistivity              => "resistance/distance"              # => 
   }
 
   class Measure
@@ -181,17 +215,19 @@ module Measures
   # Casting & Conversion Methods
   # ======================================  
     def convert_to(target)
-    
+      raise NoMethodError, "this method should have been overridden in either BaseMeasure or ComplexMeasure"
     end
   
   end
 
   class BaseMeasure < Measure
-    
+    def convert_to(target)
+      si_convert_to(target)
+    end
     
     def si_convert_to(new_modifier)
       raise ArgumentError, "New unit modifier must be a valid SI prefix (#{Measures::PREFIX_FULL.keys.compact.join(",")})" unless Measures::PREFIX_FULL.keys.include? new_modifier
-      modifier_order_of_magnitude = Measures::PREFIX_FULL[@multiple_modifier]
+      modifier_order_of_magnitude = Measures::PREFIX_FULL[@modifier]
       new_order_of_magnitude    = Measures::PREFIX_FULL[new_modifier]
 
       power_conversion = modifier_order_of_magnitude - new_order_of_magnitude
@@ -212,7 +248,9 @@ module Measures
   end
 
   class ComplexMeasure < Measure
-  
+    def convert_to(target)
+      
+    end
   end
 
 end

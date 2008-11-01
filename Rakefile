@@ -57,7 +57,7 @@ task :test do
       task
     end
   end.compact
-  abort "Errors running #{errors.to_sentence}!" if errors.any?
+  abort "Errors running #{errors}!" if errors.any?
 end
 namespace :test do
   
