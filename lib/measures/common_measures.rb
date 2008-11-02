@@ -1,6 +1,6 @@
-require 'lib/measures/measures'
+require 'measures'
 
-class Second < Measures::Measure
+class Second < Measures::BaseMeasure
   DURATIONS = {
     "minute"  => 60,
     "hour"    => 3600,
@@ -9,9 +9,9 @@ class Second < Measures::Measure
   }
   
   DURATIONS_ABBREVIATED = {
-    "min"     => "minute"
-    "h"       => "hour"
-    "d"       => "day"
+    "min"     => "minute",
+    "h"       => "hour",
+    "d"       => "day",
     "a"       => "year"
   }
   DURATIONS_REGEXP =              Regexp.new(DURATIONS.keys.compact.join("|"))
@@ -24,4 +24,7 @@ class Second < Measures::Measure
       si_convert_to(modifier)
     end
   end
+end
+
+class Celsius < Measures::BaseMeasure
 end
