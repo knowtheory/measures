@@ -25,3 +25,11 @@ end
 
 class Ton < Measure::BaseMeasure
 end
+
+module USCustomarySystem
+  BASE_MEASURES = {
+    :distance => Inch,
+    :mass     => Ounce,
+    
+  }
+end

@@ -297,7 +297,7 @@ module Measures
       Measures::PREFIX_FULL.keys.compact.each do |modifier|
         subclass.class_eval <<-evalblock
           def #{modifier}#{@@unit}
-            convert_to("#{modifier}")
+            convert_to("#{modifier}#{@@unit}")
           end
         evalblock
       end
