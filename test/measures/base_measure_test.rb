@@ -1,27 +1,33 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class BaseMeasureTest < Test::Unit::TestCase
+
   def setup
-    @measure = Measures::BaseMeasure.new(4,"kilo")
+    @measure = Smoot.new(4,"kilosmoots")
   end
   
-  def test_internal_value_for_measure
-    assert @measure = Measures::BaseMeasure.new(4,"yocto")
+  should "represent value as a float internally" do
+    assert @measure = Smoot.new(4,"yoctosmoots")
     assert_equal 4, @measure.value
   end
   
-  def test_internals_after_conversion_to_base_for_measures
+  should "convert from prefixed measure to base measure" do
     assert @measure
-    assert_equal 4000, @measure.convert_to("base").value
+    assert_equal 4000, @measure.convert_to("smoots").value
   end
   
-  def test_abstract_measure_class_prefix_conversion
+  should "convert from prefixed measure to a different prefixed measure" do
     assert @measure
-    assert_equal 400, @measure.convert_to("deca").value
+    assert_equal 400, @measure.convert_to("decasmoots").value
   end
   
-  def test_abstract_measure_class_prefix_conversion_is_chainable
+  should "convert from base measure to prefixed measure" do
+    assert @measure = Smoot.new(4,"smoots")
+  end
+  
+  should "allow for measure conversions to be chainable" do
     assert @measure
     assert_equal 4, @measure.convert_to("deca").convert_to("kilo").value
   end
+  
 end
