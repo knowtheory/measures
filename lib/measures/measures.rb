@@ -143,6 +143,11 @@ module Measures
     :resistivity              => "resistance/distance"              # => 
   }
 
+  def tokenize_unit(target)
+    target_hash = {}
+    return target_hash
+  end
+
   class Measure
     # override these for concrete classes
     @@unit          = "unitless"
@@ -355,4 +360,8 @@ class Metre < Measures::BaseMeasure
 end
 Metre.new(4,"kilo").centimetres
 Metre.new(4,"kilo") == Metre.new(4000)
+=end
+=begin
+>>"%.2f" % "1.7777777"
+=> "1.78"
 =end
