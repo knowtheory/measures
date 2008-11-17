@@ -1,58 +1,61 @@
 require 'english/inflect'
 
 module Measures
-  PREFIX_FULL = {  
-              "yocto"   => -24,
-              "zepto"   => -21,
-              "atto"    => -18,
-              "fempto"  => -15,
-              "pico"    => -12,
-              "nano"    => -9, 
-              "micro"   => -6, 
-              "milli"   => -3, 
-              "centi"   => -2, 
-              "deci"    => -1, 
-              "base"    => 0,
-              "deca"    => 1,  
-              "hecto"   => 2,  
-              "kilo"    => 3,  
-              "mega"    => 6,  
-              "giga"    => 9,  
-              "tera"    => 12, 
-              "peta"    => 15, 
-              "exo"     => 18, 
-              "zetta"   => 21, 
-              "yotta"   => 24, 
-            }
+  PREFIX_FULL = 
+  {  # definition of prefixes as powers of 10
+    "yocto"   => -24,
+    "zepto"   => -21,
+    "atto"    => -18,
+    "fempto"  => -15,
+    "pico"    => -12,
+    "nano"    => -9, 
+    "micro"   => -6, 
+    "milli"   => -3, 
+    "centi"   => -2, 
+    "deci"    => -1, 
+    "base"    => 0,
+    "deca"    => 1,  
+    "hecto"   => 2,  
+    "kilo"    => 3,  
+    "mega"    => 6,  
+    "giga"    => 9,  
+    "tera"    => 12, 
+    "peta"    => 15, 
+    "exo"     => 18, 
+    "zetta"   => 21, 
+    "yotta"   => 24, 
+  }
 
-  PREFIX_ABBREVIATED = {
-              "y"  => "yocto",
-              "z"  => "zepto",
-              "a"  => "atto",
-              "f"  => "fempto",
-              "p"  => "pico",
-              "n"  => "nano",
-              "μ"  => "micro",
-              "m"  => "milli",
-              "c"  => "centi",
-              "d"  => "deci",
-              "da" => "deca",
-              "h"  => "hecto",
-              "k"  => "kilo",
-              "M"  => "mega",
-              "G"  => "giga",
-              "T"  => "tera",
-              "P"  => "peta",
-              "E"  => "exo",
-              "Z"  => "zetta",
-              "Y"  => "yotta",
-             }
+  PREFIX_ABBREVIATED = 
+  {
+    "y"  => "yocto",
+    "z"  => "zepto",
+    "a"  => "atto",
+    "f"  => "fempto",
+    "p"  => "pico",
+    "n"  => "nano",
+    "mu" => "micro",
+    "μ"  => "micro",
+    "m"  => "milli",
+    "c"  => "centi",
+    "d"  => "deci",
+    "da" => "deca",
+    "h"  => "hecto",
+    "k"  => "kilo",
+    "M"  => "mega",
+    "G"  => "giga",
+    "T"  => "tera",
+    "P"  => "peta",
+    "E"  => "exo",
+    "Z"  => "zetta",
+    "Y"  => "yotta",
+  }
   
   PREFIX_FULL_REGEXP =        Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
   PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 
-  MEASURE_MAP = {
-    # measure of              # description/derivation              # unit derivation in SI
+  MEASURE_MAP = 
+  { # measure of              # description/derivation              # unit derivation in SI
     :frequency                => "duration^-1",                     # => 1/s
     :angle                    => "",                                # => m/m
     :solid_angle              => "",                                # => m^2/m^2
@@ -365,3 +368,5 @@ Metre.new(4,"kilo") == Metre.new(4000)
 >>"%.2f" % "1.7777777"
 => "1.78"
 =end
+
+Measures::parse_definition("m/")

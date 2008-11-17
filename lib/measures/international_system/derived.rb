@@ -178,7 +178,7 @@ module InternationalSystem
     :crackle                  => ,
     :pop                      => ,
     :area                     => ,
-    :volumetric_flow          => ,
+    :volumetric_flow          => m^3/s,
     :angular_velocity         => ,
     :momentum                 => ,
     :angular_momentum         => ,
