@@ -1,140 +1,120 @@
-class Hertz < Measure::ComplexMeasure
-  @@quantity      = "frequency"
-  @@unit          = "s^-1"
-  @@unit_alias    = {:abbreviation => "Hz"}
-end
+module InternationalSystem
 
-class Radian < Measure::ComplexMeasure
-  @@quantity      = "angle"
-  @@unit          = "m/m" # m/m
-  @@unit_alias    = {:abbreviation => "rad"}
-end
+  class Hertz < Measure::ComplexMeasure
+    defined_as "frequency", "s^-1"
+    abbreviated_as "Hz"
+  end
 
-class Steradian < Measure::ComplexMeasure
-  @@quantity      = "solid_angle"
-  @@unit          = "m^2/m^2" # m^2/m^2?
-  @@unit_alias    = {:abbreviation => "sr"}
-end
+  class Radian < Measure::ComplexMeasure
+    defined_as "angle", "m/m" # m/m
+    abbreviated_as "rad"
+  end
 
-class Newton < Measure::ComplexMeasure
-  @@quantity      = "force"
-  @@unit          = "m*kg/s^2"
-  @@unit_alias    = {:abbreviation => "N", :aliases => []}  
-end
+  class Steradian < Measure::ComplexMeasure
+    defined_as "solid_angle", "m^2/m^2" # m^2/m^2?
+    abbreviated_as "sr"
+  end
 
-class Pascal < Measure::ComplexMeasure
-  @@quantity      = "pressure"
-  @@unit          = "N/m^2"
-  @@unit_alias    = {:abbreviation => "Pa", :aliases => []}
-end
+  class Newton < Measure::ComplexMeasure
+    defined_as "force", "m*kg/s^2"
+    abbreviated_as "N"  
+  end
 
-class Joule < Measure::ComplexMeasure
-  @@quantity      = "energy"
-  @@unit          = "N*m"
-  @@unit_alias    = {:abbreviation => "J", :aliases => []}
-end
+  class Pascal < Measure::ComplexMeasure
+    defined_as "pressure", "N/m^2"
+    abbreviated_as "Pa"
+  end
 
-class Watt < Measure::ComplexMeasure
-  @@quantity      = "power"
-  @@unit          = "J/s"
-  @@unit_alias    = {:abbreviation => "W", :aliases => []}
-end
+  class Joule < Measure::ComplexMeasure
+    defined_as "energy", "N*m"
+    abbreviated_as "J"
+  end
 
-class Coulomb < Measure::ComplexMeasure
-  @@quantity      = "charge"
-  @@unit          = "s*A"
-  @@unit_alias    = {:abbreviation => "C", :aliases => []}
-end
+  class Watt < Measure::ComplexMeasure
+    defined_as "power", "J/s"
+    abbreviated_as "W"
+  end
 
-class Volt < Measure::ComplexMeasure
-  @@quantity      = "voltage"
-  @@unit          = "W/A"
-  @@unit_alias    = {:abbreviation => "V", :aliases => []}
-end
+  class Coulomb < Measure::ComplexMeasure
+    defined_as "charge", "s*A"
+    abbreviated_as "C"
+  end
 
-class Farad < Measure::ComplexMeasure
-  @@quantity      = "capacitance"
-  @@unit          = "C/V"
-  @@unit_alias    = {:abbreviation => "F", :aliases => []}
-end
+  class Volt < Measure::ComplexMeasure
+    defined_as "voltage", "W/A"
+    abbreviated_as "V"
+  end
 
-class Ohm < Measure::ComplexMeasure
-  @@quantity      = "resistance"
-  @@unit          = "V/A"
-  @@unit_alias    = {:abbreviation => "Ω", :aliases => []}
-end
+  class Farad < Measure::ComplexMeasure
+    defined_as "capacitance", "C/V"
+    abbreviated_as "F"
+  end
 
-class Siemens < Measure::ComplexMeasure
-  @@quantity      = "conductance"
-  @@unit          = "Ω^-1"
-  @@unit_alias    = {:abbreviation => "S", :aliases => []}
-end
+  class Ohm < Measure::ComplexMeasure
+    defined_as "resistance", "V/A"
+    abbreviated_as "Ω"
+  end
 
-class Weber < Measure::ComplexMeasure
-  @@quantity      = "magnetic_flux"
-  @@unit          = "J/A"
-  @@unit_alias    = {:abbreviation => "Wb", :aliases => []}
-end
+  class Siemens < Measure::ComplexMeasure
+    defined_as "conductance", "Ω^-1"
+    abbreviated_as "S"
+  end
 
-class Tesla < Measure::ComplexMeasure
-  @@quantity      = "inductance"
-  @@unit          = "V*s/m^2"
-  @@unit_alias    = {:abbreviation => "T", :aliases => []}
-end
+  class Weber < Measure::ComplexMeasure
+    defined_as "magnetic_flux", "J/A"
+    abbreviated_as "Wb"
+  end
 
-class Henry < Measure::ComplexMeasure
-  @@quantity      = "inductance"
-  @@unit          = "V*s/A"
-  @@unit_alias    = {:abbreviation => "H", :aliases => []}
-end
+  class Tesla < Measure::ComplexMeasure
+    defined_as "inductance", "V*s/m^2"
+    abbreviated_as "T"
+  end
 
-class Celcius < Measure::ComplexMeasure
-  @@quantity      = "temperature"
-  @@unit          = "K - 273.15"
-  @@unit_alias    = {:abbreviation => "C", :aliases => ["centigrade"]}
-end
+  class Henry < Measure::ComplexMeasure
+    defined_as "inductance", "V*s/A"
+    abbreviated_as "H"
+  end
 
-class Lumen < Measure::ComplexMeasure
-  @@quantity      = "luminous_flux"
-  @@unit          = "cd*sr"
-  @@unit_alias    = {:abbreviation => "lm", :aliases => []}
-end
+  class Celcius < Measure::ComplexMeasure
+    defined_as "temperature", "K - 273.15"
+    @@unit_alias    = {:abbreviation => "C", :aliases => ["centigrade"]}
+  end
 
-class Lux < Measure::ComplexMeasure
-  @@quantity      = "illuminance"
-  @@unit          = "lm/m^2"
-  @@unit_alias    = {:abbreviation => "lx", :aliases => []}
-end
+  class Lumen < Measure::ComplexMeasure
+    defined_as "luminous_flux", "cd*sr"
+    abbreviated_as "lm"
+  end
 
-class Becquerel < Measure::ComplexMeasure
-  @@quantity      = "radioactivity"
-  @@unit          = "s^-1"
-  @@unit_alias    = {:abbreviation => "Bq", :aliases => []}
-end
+  class Lux < Measure::ComplexMeasure
+    defined_as "illuminance", "lm/m^2"
+    abbreviated_as "lx"
+  end
 
-class Gray < Measure::ComplexMeasure
-  @@quantity      = "absorbed_dose"
-  @@unit          = "J/kg"
-  @@unit_alias    = {:abbreviation => "Gy", :aliases => []}
-end
+  class Becquerel < Measure::ComplexMeasure
+    defined_as "radioactivity", "s^-1"
+    abbreviated_as "Bq"
+  end
 
-class Sievert < Measure::ComplexMeasure
-  @@quantity      = "equivalent_dose"
-  @@unit          = "J/kg"
-  @@unit_alias    = {:abbreviation => "Sv", :aliases => []}
-end
+  class Gray < Measure::ComplexMeasure
+    defined_as "absorbed_dose", "J/kg"
+    abbreviated_as "Gy"
+  end
 
-class Katal < Measure::ComplexMeasure
-  @@quantity      = "catalytic_activity"
-  @@unit          = "mol/s"
-  @@unit_alias    = {:abbreviation => "kat", :aliases => []}
-end
+  class Sievert < Measure::ComplexMeasure
+    defined_as "equivalent_dose", "J/kg"
+    abbreviated_as "Sv"
+  end
 
-class Litre < Measure::ComplexMeasure
-  @@quantity      = "volume"
-  @@unit          = "dm^3"
-  @@unit_alias    = {:abbreviation => "l", :aliases => ["liter"]}
-end
+  class Katal < Measure::ComplexMeasure
+    defined_as "catalytic_activity", "mol/s"
+    abbreviated_as "kat"
+  end
+
+  class Litre < Measure::ComplexMeasure
+    defined_as "volume", "dm^3"
+    abbreviated_as "l"
+    aka "liter"
+  end
 
 =begin
 class < Measure::ComplexMeasure
@@ -145,7 +125,6 @@ end
 =end
 
 
-module InternationalSystem
   DERIVED_MEASURES = {
     :frequency                => Hertz,
     :angle                    => Radian,
