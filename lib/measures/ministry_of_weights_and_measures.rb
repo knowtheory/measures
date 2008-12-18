@@ -1,7 +1,13 @@
+require 'singleton'
+require 'treetop'
+require 'measures'
+
+# # if you don't like the class name, just subclass it, or alias it to something else :)
+# i've already stuck it in Ministry for my convenience
 class MinistryOfWeightsAndMeasures
   include Singleton
   
-  MEASURE_MAP = 
+  @@measure_map = 
   { # measure of              # description/derivation              # unit derivation in SI
     :frequency                => "duration^-1",                     # => 1/s
     :angle                    => "distance/distance",               # => m/m
@@ -60,7 +66,7 @@ class MinistryOfWeightsAndMeasures
       :mass_density           => "density",
     :wave_number              => "distance^-1",                     # => 
     :specific_volume          => "distance^3/mass",                 # => 
-    :molar_mass               => "mass/mole"
+    :molar_mass               => "mass/mole",
     :molarity                 => "mole/volume",                     # => 
       :molar_concentration    => "molarity",
     :molar_volume             => "volume/mole",                     # => 
@@ -93,5 +99,55 @@ class MinistryOfWeightsAndMeasures
     :absorbed_dose_rate       => "absorbed_dose/duration",          # => 
     :resistivity              => "resistance/distance"              # => 
   }
+  
+  @@measures      = {}
+  @@quantities    = {}
+  @@abbreviations = {}
+  @@prefixes                  = Measures::PREFIX_FULL
+  @@abbreviations[:prefixes]  = Measures::PREFIX_ABBREVIATED
+  @@abbreviations[:measures]  = {}
+  @@measure_names_regexp  = Regexp.new(@@measures.keys.compact.join("|"))
+  @@measure_abbr_regexp   = Regexp.new(@@abbreviations[:measures].keys.compact.join("|"))
+  @@prefix_full_regexp    = Regexp.new(@@prefixes.keys.compact.join("|"))
+  @@prefix_abbr_regexp    = Regexp.new(@@abbreviations[:prefixes].keys.compact.join("|"))
 
+  PREFIX_FULL_REGEXP =        Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
+  PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
+
+  # put in a complex definition and get out a definition in terms
+  # of the base units for a measurement system.
+  def self.factor(definition)
+    
+  end
+
+  # put in a definition, ensures that:
+  #   all the units in the definition are valid
+  #   the definition parses properly
+  def self.validate(definition)
+    
+  end
+  
+  def self.parse(definition)
+    
+  end
+  
+  def self.identify(definition)
+    
+  end
+  
+  def self.register_abbreviation(klass,abbreviation)
+    message =  "#{abbreviation} is already being used, and can't be set as the abbreviation for #{klass.to_s}"
+    raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
+    @@abbreviations[abbreviation] = klass
+  end
+  
+  def self.abbreviations
+    @@abbreviations
+  end
+  
+  def self.equivalent?(def1,def2)
+    self.factor(def1) == self.factor(def2)
+  end
 end
+
+Register = Ministry = MinistryOfWeightsAndMeasures

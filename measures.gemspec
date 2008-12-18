@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.author        = "Ted Han"
   s.email         = "gems@skein.us"
   s.summary       = "Scientific measurement & unit conversion library"
-  s.require_path  = "lib"
+  s.require_path  = 'lib'
   s.platform      = Gem::Platform::RUBY
-  s.files         = Dir["{lib,}/**/*"]
+  s.files         = Dir["{lib}/**/*"]
 end

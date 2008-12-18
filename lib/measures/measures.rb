@@ -25,7 +25,7 @@ module Measures
     "zetta"   => 21, 
     "yotta"   => 24, 
   }
-
+  
   PREFIX_ABBREVIATED = 
   {
     "y"  => "yocto",
@@ -51,36 +51,52 @@ module Measures
     "Y"  => "yotta",
   }
   
-  PREFIX_FULL_REGEXP =        Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
-  PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
-
   module MeasureProperties
-    attr_reader :quantity, :definition, :abbreviation, :aliases
+    attr_reader :quantity, :definition, :factored_definition, :abbreviation, :aliases
     
     def defined_as(quantity, definition="base")
       # set the class instance variables
       instance_variable_set("@quantity", quantity)     unless @quantity
-      instance_variable_set("@definition", definition) unless @definition
+      unless @definition
+        instance_variable_set("@definition", definition)
+        instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
+      end
       
       # register class w/ the Ministry of Weights and Measures
     end
     
+    def abbreviated_as(abbreviation)
+      MinistryOfWeightsAndMeasures.register_abbreviation(self,abbreviation)
+      instance_variable_set("@abbreviation",abbreviation)
+    end
+    
     def aka(*aliases)
       instance_variable_set("@aliases",aliases)
+      # register aliases w/ Ministry of Weights and Measures
+    end
+  end
+  
+  module Conversion
+    def convert_to(destination)
+      
     end
   end
   
   module Calculation
     def +(addend)
+      
     end
     
     def -(subtractor)
+      
     end
     
     def *(multiplicand)
+      
     end
     
     def /(divisor)
+      
     end
   end
   
@@ -91,12 +107,24 @@ module Measures
     end
     
     def compatable_with?(object)
-      self.class.definition == object.class.definition
+      self.class.quantity == object.class.quantity or     # if the quantities are named and identical
+      self.class.definition == object.class.definition or # or the definitions are the same then yay
+      MinistryOfWeightsAndMeasures.factor(self.class.definition) == MinistryOfWeightsAndMeasures.factor(object.class.definition)
     end
   end
   
-  module Display
+  module Reporting
+    def to_s
+      
+    end
     
+    def self.basic?
+      
+    end
+    
+    def self.complex?
+      
+    end
   end
   
   class Measure
@@ -104,17 +132,20 @@ module Measures
     # Since class variables are shared amongst subclasses
     # we're adding instance variables to the class objects themselves.
     extend MeasureProperties
+    include Calculation, Comparitors, Conversion, Reporting
     
-    def initialize(value,modifier,options={})
+    def initialize(value,definition=self.class.definition,options={})
+      # definition for a measure has to be compatable w/ it's subclass's definition
+      if self.class.definition and 
+      not MinistryOfWeightsAndMeasures.equivalent?(self.class.definition, definition)
+        message = "An instance of #{self.class.to_s} can't be created w/ a definition other than itself"
+        raise ArgumentError, message
+      end
     end
-  end
-  
-  class BaseMeasure < Measure
     
-  end
-  
-  class ComplexMeasure < Measure
-    
+    def self.inherited(subclass)
+      
+    end
   end
   
 end

@@ -1,14 +1,18 @@
+$:.push File.join(File.dirname(__FILE__), '..', 'lib')
+
 require 'rubygems'
 require 'test/unit'
 require 'lib/measures'
 require 'shoulda'
 
-class Smoot < Measures::BaseMeasure # 1.701 m
-  @@quantity      = "distance"
+class Smoot < Measures::Measure # 1.701 m
+  defined_as "distance"
+  abbreviated_as "sm"
   # this should automatically add methods which will be tested.
 end
 
-class Sabre < Measures::BaseMeasure
-  @@quantity      = "distance"
-  @@aliases       = {:abbreviation => "sab", :aliases=>["saber"]}
+class Sabre < Measures::Measure # fictional measure that == 30 inches
+  defined_as "distance"
+  abbreviated_as "sab"
+  aka "saber"
 end

@@ -1,0 +1,45 @@
+grammar Definition
+	rule expression # top level
+		(binary_expression / quantity)
+	end
+
+	rule binary_expression # this is where math comes from.
+		quantity " "* arithmetic_operators " "* quantity
+	end
+	
+	rule quantity # these are the sorts of things that math can be performed on.
+		("(" " "*)? ( exponentiated / text / number ) (")" " "*)?
+	end
+	
+	rule exponentiated # hey look exponents! "m^2", "m^-2"
+		text " "? exponent_operators " "? number
+	end
+
+	rule arithmetic_operators
+		adders / multipliers
+	end
+	
+	rule exponent_operators
+		"^" / "**"
+	end
+	
+	rule adders
+		"+" / "-"
+	end
+	
+	rule multipliers
+		"*" / "×" / "/" / "÷"
+	end
+	
+	rule negative_number
+		"-" " "* number
+	end
+
+	rule text
+		[a-zA-Z]+
+	end
+
+	rule number
+		([0-9]+ "."? [0-9]*) / negative_number
+  end
+end

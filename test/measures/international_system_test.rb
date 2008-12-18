@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MeasureTest < Test::Unit::TestCase
   def setup
-    @measure = Measures::Measure.new(4,"kilo")
+  #  @measure = Measures::Measure.new(4,"kilo")
   end
 
   def test_conversions

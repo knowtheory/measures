@@ -1,123 +1,123 @@
 module InternationalSystem
 
-  class Hertz < Measure::ComplexMeasure
+  class Hertz < Measures::Measure
     defined_as "frequency", "s^-1"
     abbreviated_as "Hz"
   end
 
-  class Radian < Measure::ComplexMeasure
+  class Radian < Measures::Measure
     defined_as "angle", "m/m" # m/m
     abbreviated_as "rad"
   end
 
-  class Steradian < Measure::ComplexMeasure
+  class Steradian < Measures::Measure
     defined_as "solid_angle", "m^2/m^2" # m^2/m^2?
     abbreviated_as "sr"
   end
 
-  class Newton < Measure::ComplexMeasure
+  class Newton < Measures::Measure
     defined_as "force", "m*kg/s^2"
     abbreviated_as "N"  
   end
 
-  class Pascal < Measure::ComplexMeasure
+  class Pascal < Measures::Measure
     defined_as "pressure", "N/m^2"
     abbreviated_as "Pa"
   end
 
-  class Joule < Measure::ComplexMeasure
+  class Joule < Measures::Measure
     defined_as "energy", "N*m"
     abbreviated_as "J"
   end
 
-  class Watt < Measure::ComplexMeasure
+  class Watt < Measures::Measure
     defined_as "power", "J/s"
     abbreviated_as "W"
   end
 
-  class Coulomb < Measure::ComplexMeasure
+  class Coulomb < Measures::Measure
     defined_as "charge", "s*A"
     abbreviated_as "C"
   end
 
-  class Volt < Measure::ComplexMeasure
+  class Volt < Measures::Measure
     defined_as "voltage", "W/A"
     abbreviated_as "V"
   end
 
-  class Farad < Measure::ComplexMeasure
+  class Farad < Measures::Measure
     defined_as "capacitance", "C/V"
     abbreviated_as "F"
   end
 
-  class Ohm < Measure::ComplexMeasure
+  class Ohm < Measures::Measure
     defined_as "resistance", "V/A"
     abbreviated_as "Ω"
   end
 
-  class Siemens < Measure::ComplexMeasure
+  class Siemens < Measures::Measure
     defined_as "conductance", "Ω^-1"
     abbreviated_as "S"
   end
 
-  class Weber < Measure::ComplexMeasure
+  class Weber < Measures::Measure
     defined_as "magnetic_flux", "J/A"
     abbreviated_as "Wb"
   end
 
-  class Tesla < Measure::ComplexMeasure
+  class Tesla < Measures::Measure
     defined_as "inductance", "V*s/m^2"
     abbreviated_as "T"
   end
 
-  class Henry < Measure::ComplexMeasure
+  class Henry < Measures::Measure
     defined_as "inductance", "V*s/A"
     abbreviated_as "H"
   end
 
-  class Celcius < Measure::ComplexMeasure
+  class Celcius < Measures::Measure
     defined_as "temperature", "K - 273.15"
     @@unit_alias    = {:abbreviation => "C", :aliases => ["centigrade"]}
   end
 
-  class Lumen < Measure::ComplexMeasure
+  class Lumen < Measures::Measure
     defined_as "luminous_flux", "cd*sr"
     abbreviated_as "lm"
   end
 
-  class Lux < Measure::ComplexMeasure
+  class Lux < Measures::Measure
     defined_as "illuminance", "lm/m^2"
     abbreviated_as "lx"
   end
 
-  class Becquerel < Measure::ComplexMeasure
+  class Becquerel < Measures::Measure
     defined_as "radioactivity", "s^-1"
     abbreviated_as "Bq"
   end
 
-  class Gray < Measure::ComplexMeasure
+  class Gray < Measures::Measure
     defined_as "absorbed_dose", "J/kg"
     abbreviated_as "Gy"
   end
 
-  class Sievert < Measure::ComplexMeasure
+  class Sievert < Measures::Measure
     defined_as "equivalent_dose", "J/kg"
     abbreviated_as "Sv"
   end
 
-  class Katal < Measure::ComplexMeasure
+  class Katal < Measures::Measure
     defined_as "catalytic_activity", "mol/s"
     abbreviated_as "kat"
   end
 
-  class Litre < Measure::ComplexMeasure
+  class Litre < Measures::Measure
     defined_as "volume", "dm^3"
     abbreviated_as "l"
     aka "liter"
   end
 
 =begin
-class < Measure::ComplexMeasure
+class < Measures::Measure
   @@quantity      = ""
   @@unit          = ""
   @@unit_alias    = {:abbreviation => "", :aliases => []}
@@ -165,6 +165,7 @@ end
     :density                  => ,
     :wave_number              => ,
     :specific_volume          => ,
+    :molar_mass               => ,
     :molarity                 => ,
     :molar_volume             => ,
     :heat_capacity            => ,
