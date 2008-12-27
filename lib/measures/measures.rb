@@ -1,6 +1,20 @@
 require 'english/inflect'
 
 module Measures
+  class NamedModifier # abstract class
+    attr_reader :value, :base, :exponent, :abbreviation
+    def initialize(abbreviation, base, exponent=1)
+      @value = base ** exponent
+      @base = base
+      @exponent = exponent
+      @abbreviation = abbreviation
+    end
+  end
+
+  class Kilo < NamedModifier
+    
+  end
+
   PREFIX_FULL = 
   {  # definition of prefixes as powers of 10
     "yocto"   => -24,
@@ -56,10 +70,10 @@ module Measures
     
     def defined_as(quantity, definition="base")
       # set the class instance variables
-      instance_variable_set("@quantity", quantity)     unless @quantity
+      instance_variable_set("@quantity", quantity) unless @quantity
       unless @definition
-        instance_variable_set("@definition", definition)
         instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
+        instance_variable_set("@definition", definition)
       end
       
       # register class w/ the Ministry of Weights and Measures
@@ -115,7 +129,7 @@ module Measures
   
   module Reporting
     def to_s
-      
+      "#{@value} "
     end
     
     def self.basic?
@@ -141,11 +155,8 @@ module Measures
         message = "An instance of #{self.class.to_s} can't be created w/ a definition other than itself"
         raise ArgumentError, message
       end
-    end
-    
-    def self.inherited(subclass)
       
+      @value = value
     end
   end
-  
 end

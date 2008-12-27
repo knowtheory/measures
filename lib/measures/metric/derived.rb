@@ -1,4 +1,4 @@
-module InternationalSystem
+module Metric
 
   class Hertz < Measures::Measure
     defined_as "frequency", "s^-1"

@@ -1,22 +1,22 @@
 grammar Definition
-	rule expression # top level
-		(binary_expression / quantity)
+	rule expression # this is where math comes from.
+		complex_quantity " "* arithmetic_operators " "* expression+ / complex_quantity
 	end
-
-	rule binary_expression # this is where math comes from.
-		quantity " "* arithmetic_operators " "* quantity
+	
+	rule complex_quantity
+		("(" " "*)? ( exponentiated / quantity ) (")" " "*)?
 	end
 	
 	rule quantity # these are the sorts of things that math can be performed on.
-		("(" " "*)? ( exponentiated / text / number ) (")" " "*)?
+		text / number
 	end
 	
 	rule exponentiated # hey look exponents! "m^2", "m^-2"
-		text " "? exponent_operators " "? number
+		quantity " "? exponent_operators " "? number
 	end
 
 	rule arithmetic_operators
-		adders / multipliers
+		" "* (adders / multipliers)
 	end
 	
 	rule exponent_operators
@@ -31,15 +31,11 @@ grammar Definition
 		"*" / "×" / "/" / "÷"
 	end
 	
-	rule negative_number
-		"-" " "* number
-	end
-
 	rule text
-		[a-zA-Z]+
+		" "* [a-zA-Z]+ <TextNode>
 	end
 
 	rule number
-		([0-9]+ "."? [0-9]*) / negative_number
+		(" "* "-"? " "* [0-9]+ "."? [0-9]*) <NumericNode>
   end
 end

@@ -1,6 +1,9 @@
+require 'english/inflect'
 require 'singleton'
 require 'treetop'
-require 'measures'
+require './lib/measures/measures'
+require './lib/measures/definition/definition'
+Treetop.load File.expand_path("./lib/measures/definition/definition")
 
 # # if you don't like the class name, just subclass it, or alias it to something else :)
 # i've already stuck it in Ministry for my convenience
@@ -131,7 +134,7 @@ class MinistryOfWeightsAndMeasures
     
   end
   
-  def self.identify(definition)
+  def self.identify(measure)
     
   end
   
@@ -139,6 +142,7 @@ class MinistryOfWeightsAndMeasures
     message =  "#{abbreviation} is already being used, and can't be set as the abbreviation for #{klass.to_s}"
     raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
     @@abbreviations[abbreviation] = klass
+    self.add_methods_to_core_for(klass)
   end
   
   def self.abbreviations
@@ -147,6 +151,16 @@ class MinistryOfWeightsAndMeasures
   
   def self.equivalent?(def1,def2)
     self.factor(def1) == self.factor(def2)
+  end
+
+  def self.add_methods_to_core_for(klass)
+    raise ArgumentError, "you must supply a valid measure class" unless klass.kind_of? Class
+    class_name = klass.to_s
+    Numeric.class_eval <<-eval_block
+      def #{class_name.split("::").join("_").downcase.pluralize}
+        #{class_name}.new(self)
+      end
+    eval_block
   end
 end
 
