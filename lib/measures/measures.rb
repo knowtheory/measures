@@ -1,20 +1,9 @@
 require 'english/inflect'
 
 module Measures
-  class NamedModifier # abstract class
-    attr_reader :value, :base, :exponent, :abbreviation
-    def initialize(abbreviation, base, exponent=1)
-      @value = base ** exponent
-      @base = base
-      @exponent = exponent
-      @abbreviation = abbreviation
-    end
-  end
 
-  class Kilo < NamedModifier
-    
-  end
-
+=begin
+  unless Measures.const_defined? :PREFIX_FULL
   PREFIX_FULL = 
   {  # definition of prefixes as powers of 10
     "yocto"   => -24,
@@ -39,7 +28,9 @@ module Measures
     "zetta"   => 21, 
     "yotta"   => 24, 
   }
+  end
   
+  unless Measures.const_defined? :PREFIX_ABBREVIATED
   PREFIX_ABBREVIATED = 
   {
     "y"  => "yocto",
@@ -64,23 +55,23 @@ module Measures
     "Z"  => "zetta",
     "Y"  => "yotta",
   }
-  
+  end
+=end
   module MeasureProperties
     attr_reader :quantity, :definition, :factored_definition, :abbreviation, :aliases
     
     def defined_as(quantity, definition="base")
       # set the class instance variables
-      instance_variable_set("@quantity", quantity) unless @quantity
-      unless @definition
-        instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
-        instance_variable_set("@definition", definition)
-      end
+      instance_variable_set("@quantity", quantity)
+      instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
+      instance_variable_set("@definition", definition)
       
       # register class w/ the Ministry of Weights and Measures
+      MinistryOfWeightsAndMeasures.register_measure(self,quantity,definition)
     end
     
     def abbreviated_as(abbreviation)
-      MinistryOfWeightsAndMeasures.register_abbreviation(self,abbreviation)
+      MinistryOfWeightsAndMeasures.register_measure_abbreviation(self,abbreviation)
       instance_variable_set("@abbreviation",abbreviation)
     end
     
@@ -97,11 +88,23 @@ module Measures
   end
   
   module Calculation
+    
+    
     def +(addend)
+      # check measures are compatable
+      
+      # convert to common base
+      
+      # perform subtraction
       
     end
     
     def -(subtractor)
+      # check measures are compatable
+      
+      # convert to common base
+      
+      # perform subtraction
       
     end
     

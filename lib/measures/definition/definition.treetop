@@ -1,14 +1,19 @@
 grammar Definition
+
 	rule expression # this is where math comes from.
-		complex_quantity " "* arithmetic_operators " "* expression+ / complex_quantity
+		complex_quantity " "* arithmetic_operators " "* expression+ / complex_quantity / parenthetical_expression
 	end
 	
+	rule parenthetical_expression
+		open_paren expression close_paren
+	end
+
 	rule complex_quantity
-		("(" " "*)? ( exponentiated / quantity ) (")" " "*)?
+		exponentiated / quantity / (open_paren ( exponentiated / quantity ) close_paren)
 	end
 	
 	rule quantity # these are the sorts of things that math can be performed on.
-		text / number
+		text / number / (open_paren (text / number) close_paren)
 	end
 	
 	rule exponentiated # hey look exponents! "m^2", "m^-2"
@@ -19,23 +24,31 @@ grammar Definition
 		" "* (adders / multipliers)
 	end
 	
+	rule open_paren
+		" "* "(" " "*
+	end
+
+	rule close_paren
+		" "* ")" " "*
+	end
+	
 	rule exponent_operators
-		"^" / "**"
+		"^" <OperatorNode> / "**" <OperatorNode>
 	end
 	
 	rule adders
-		"+" / "-"
+		"+" <OperatorNode> / "-" <OperatorNode>
 	end
 	
 	rule multipliers
-		"*" / "×" / "/" / "÷"
+		"*" <OperatorNode> / "×" <OperatorNode> / "/" <OperatorNode> / "÷" <OperatorNode>
 	end
 	
 	rule text
-		" "* [a-zA-Z]+ <TextNode>
+		" "* [a-zA-Z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
 	end
 
 	rule number
-		(" "* "-"? " "* [0-9]+ "."? [0-9]*) <NumericNode>
+		" "* "-"? " "* [0-9]+ "."? [0-9]* <NumericNode>
   end
 end

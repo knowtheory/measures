@@ -103,42 +103,69 @@ class MinistryOfWeightsAndMeasures
     :resistivity              => "resistance/distance"              # => 
   }
   
-  @@measures      = {}
-  @@quantities    = {}
-  @@abbreviations = {}
-  @@prefixes                  = Measures::PREFIX_FULL
-  @@abbreviations[:prefixes]  = Measures::PREFIX_ABBREVIATED
-  @@abbreviations[:measures]  = {}
-  @@measure_names_regexp  = Regexp.new(@@measures.keys.compact.join("|"))
-  @@measure_abbr_regexp   = Regexp.new(@@abbreviations[:measures].keys.compact.join("|"))
-  @@prefix_full_regexp    = Regexp.new(@@prefixes.keys.compact.join("|"))
-  @@prefix_abbr_regexp    = Regexp.new(@@abbreviations[:prefixes].keys.compact.join("|"))
+  @@parser                = DefinitionParser.new
+  @@measures              = [] # list of measures
+  @@quantities            = {} # quantity     => class
+  @@abbreviations         = {} # abbreviation => class
+  @@prefixes              = {}
+  @@prefix_abbreviations  = {}
+  
+  @@current_parse         = []
+  def self.current_parse=(token)
+    @@current_parse << token
+  end
+  
+  def self.current_parse
+    @@current_parse
+  end
+  
+  def self.clear_current_parse!
+#    puts @@current_parse.join(", ")
+    @@current_parse = []
+  end
 
-  PREFIX_FULL_REGEXP =        Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
-  PREFIX_ABBREVIATED_REGEXP = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
+=begin
+  @@measure_names_regexp      = Regexp.new(@@measures.keys.compact.join("|"))
+  @@measure_abbr_regexp       = Regexp.new(@@abbreviations[:measures].keys.compact.join("|"))
+  @@prefix_full_regexp        = Regexp.new(@@prefixes.keys.compact.join("|"))
+  @@prefix_abbr_regexp        = Regexp.new(@@abbreviations[:prefixes].keys.compact.join("|"))
+
+  @@prefix_full_regexp        = Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
+  @@prefix_abbreviated_regexp = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
+=end  
 
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.
   def self.factor(definition)
-    
+    result = []
+    self.clear_current_parse!
+    return result    
   end
 
   # put in a definition, ensures that:
   #   all the units in the definition are valid
   #   the definition parses properly
   def self.validate(definition)
-    
+    result = (not @@parser.parse(definition).nil?)
+    self.clear_current_parse!
+    return result
   end
   
   def self.parse(definition)
-    
+    @@parser.parse(definition)
   end
   
   def self.identify(measure)
     
   end
   
-  def self.register_abbreviation(klass,abbreviation)
+  def self.register_measure(klass,quantity,definition)
+    @@measures << klass
+    @@quantities[quantity] ||= []
+    @@quantities[quantity] << klass
+  end
+  
+  def self.register_measure_abbreviation(klass,abbreviation)
     message =  "#{abbreviation} is already being used, and can't be set as the abbreviation for #{klass.to_s}"
     raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
     @@abbreviations[abbreviation] = klass
@@ -162,6 +189,17 @@ class MinistryOfWeightsAndMeasures
       end
     eval_block
   end
+  
+  def self.remove_methods_from_core_for(klass)
+  end
+  
+  def self.reset!
+    @@measures                  = []
+    @@quantities                = {}
+    @@abbreviations             = {} # abbreviation => class
+  end
 end
 
-Register = Ministry = MinistryOfWeightsAndMeasures
+unless Object.const_defined?(:Registry) and Object.const_defined?(:Ministry)
+  Registry = Ministry = MinistryOfWeightsAndMeasures
+end

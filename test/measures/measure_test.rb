@@ -3,7 +3,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 class MeasureTest < Test::Unit::TestCase
 
   def setup
-    @measure = Smoot.new(4,"kilosmoots")
+    @four_kilosmoots = Smoot.new(4,"kilosmoots")
+    @six_decasabers  = Sabre.new(6,"decasabers")
   end
 
 =begin  

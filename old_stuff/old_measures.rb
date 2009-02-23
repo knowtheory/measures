@@ -278,6 +278,7 @@ module Measures
   
   end
 
+=begin
   class BaseMeasure < Measure
     # override these for concrete classes
     # @@quantity      = "quantity"
@@ -325,6 +326,7 @@ module Measures
       
     end
   end
+=end
 
 end
 =begin
@@ -369,4 +371,4 @@ Metre.new(4,"kilo") == Metre.new(4000)
 => "1.78"
 =end
 
-Measures::parse_definition("m/")
+# Measures::parse_definition("m/")

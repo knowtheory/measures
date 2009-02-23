@@ -1,6 +1,6 @@
-require 'measures'
+require 'lib/measures'
 
-class Second < Measures::BaseMeasure
+class Second < Measures::Measure
   DURATIONS = {
     "minute"  => 60,
     "hour"    => 3600,
@@ -26,5 +26,5 @@ class Second < Measures::BaseMeasure
   end
 end
 
-class Celsius < Measures::BaseMeasure
+class Celsius < Measures::Measure
 end

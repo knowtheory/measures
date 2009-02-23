@@ -1,3 +1,4 @@
+require 'lib/measures/metric/metric'
 module Metric
 
   class Hertz < Measures::Measure
@@ -6,12 +7,12 @@ module Metric
   end
 
   class Radian < Measures::Measure
-    defined_as "angle", "m/m" # m/m
+    defined_as "angle", "m/m"
     abbreviated_as "rad"
   end
 
   class Steradian < Measures::Measure
-    defined_as "solid_angle", "m^2/m^2" # m^2/m^2?
+    defined_as "solid_angle", "m^2/m^2"
     abbreviated_as "sr"
   end
 
@@ -46,7 +47,7 @@ module Metric
   end
 
   class Farad < Measures::Measure
-    defined_as "capacitance", "C/V"
+    defined_as "capacitance", "C/V" # (s*A)/((J/s)/A)
     abbreviated_as "F"
   end
 

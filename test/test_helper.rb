@@ -4,6 +4,7 @@ require 'rubygems'
 require 'test/unit'
 require 'lib/measures'
 require 'shoulda'
+require 'lib/measures/metric/metric'
 
 class Smoot < Measures::Measure # 1.701 m
   defined_as "distance"

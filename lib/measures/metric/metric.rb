@@ -1,5 +1,8 @@
 require 'lib/measures'
-module InternationalSystem
+require 'lib/measures/metric/base'
+require 'lib/measures/metric/derived'
+
+module Metric
   MEASURES = {
     # base SI measures
     :distance           => "Metre",
@@ -12,9 +15,9 @@ module InternationalSystem
     # compound SI measures
     :area               => "Square Metre",
     :volume             => "Cubic Metre",
-    :velocity           => "Metre per Second"
-    :acceleration       => "Metre per Second Squared"
-    :volumetric_flow    => "Cubic Metre per Second"
+    :velocity           => "Metre per Second",
+    :acceleration       => "Metre per Second Squared",
+    :volumetric_flow    => "Cubic Metre per Second",
 
     # derived SI measures
     :angle              => "Radian",
@@ -78,6 +81,5 @@ module InternationalSystem
  
     :catalitic_activity => "kat"
   }
-  
   
 end
