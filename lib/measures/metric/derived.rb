@@ -1,4 +1,5 @@
-require 'lib/measures/metric/metric'
+require 'common_measures'
+require 'metric/metric'
 module Metric
 
   class Hertz < Measures::Measure
@@ -47,7 +48,7 @@ module Metric
   end
 
   class Farad < Measures::Measure
-    defined_as "capacitance", "C/V" # (s*A)/((J/s)/A)
+    defined_as "capacitance", "C/V" # == (s*A)/(W/A) == (s*A)/((J/s)/A) == (s*A)/(J/(s*A)) == (s*s*A*A)/J == (s^2*A^2)/J
     abbreviated_as "F"
   end
 

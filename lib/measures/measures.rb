@@ -60,14 +60,18 @@ module Measures
   module MeasureProperties
     attr_reader :quantity, :definition, :factored_definition, :abbreviation, :aliases
     
-    def defined_as(quantity, definition="base")
+    # Interesting fact:
+    #   By storing the factored definitions for each class,
+    #   definition parse trees are in effect memoized for
+    #   subsequent classes which reference a defined class.
+    def defined_as(quantity, definition=self.to_s.split("::").last.downcase)
       # set the class instance variables
+      puts "Definition is #{definition}"
       instance_variable_set("@quantity", quantity)
-      instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
       instance_variable_set("@definition", definition)
-      
       # register class w/ the Ministry of Weights and Measures
       MinistryOfWeightsAndMeasures.register_measure(self,quantity,definition)
+      instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
     end
     
     def abbreviated_as(abbreviation)
@@ -155,7 +159,7 @@ module Measures
       # definition for a measure has to be compatable w/ it's subclass's definition
       if self.class.definition and 
       not MinistryOfWeightsAndMeasures.equivalent?(self.class.definition, definition)
-        message = "An instance of #{self.class.to_s} can't be created w/ a definition other than itself"
+        message = "An instance of #{self.class.to_s} can't be created w/ a definition (#{definition}) other than itself (#{self.class.definition})"
         raise ArgumentError, message
       end
       

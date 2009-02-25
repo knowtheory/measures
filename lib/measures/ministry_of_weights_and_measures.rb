@@ -104,26 +104,12 @@ class MinistryOfWeightsAndMeasures
   }
   
   @@parser                = DefinitionParser.new
-  @@measures              = [] # list of measures
+  @@measures              = {} # list of measures
   @@quantities            = {} # quantity     => class
   @@abbreviations         = {} # abbreviation => class
   @@prefixes              = {}
   @@prefix_abbreviations  = {}
   
-  @@current_parse         = []
-  def self.current_parse=(token)
-    @@current_parse << token
-  end
-  
-  def self.current_parse
-    @@current_parse
-  end
-  
-  def self.clear_current_parse!
-#    puts @@current_parse.join(", ")
-    @@current_parse = []
-  end
-
 =begin
   @@measure_names_regexp      = Regexp.new(@@measures.keys.compact.join("|"))
   @@measure_abbr_regexp       = Regexp.new(@@abbreviations[:measures].keys.compact.join("|"))
@@ -134,20 +120,38 @@ class MinistryOfWeightsAndMeasures
   @@prefix_abbreviated_regexp = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 =end  
 
+  def self.tokens
+    @@tokens ||= []
+  end
+  
+  def self.clear_tokens!
+    @@tokens = []
+  end
+
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.
   def self.factor(definition)
-    result = []
-    self.clear_current_parse!
-    return result    
+    tree = self.parse(definition) # get tree, and provide tokens
+    puts "Factoring Definition"
+    result = self.tokens.map do |token|
+      puts "TOKEN #{token}"
+      if token =~ /^[A-Za-z]+$/
+        klass = self.identify(token)
+        raise StandardError, "Could not identify a measure for '#{token}'" unless klass
+        "(#{klass.factored_definition})"
+      else
+        token
+      end
+    end.join
+    self.clear_tokens!
+    return result
   end
 
   # put in a definition, ensures that:
   #   all the units in the definition are valid
   #   the definition parses properly
   def self.validate(definition)
-    result = (not @@parser.parse(definition).nil?)
-    self.clear_current_parse!
+    result = (not self.parse(definition).nil?)
     return result
   end
   
@@ -156,11 +160,18 @@ class MinistryOfWeightsAndMeasures
   end
   
   def self.identify(measure)
-    
+    if @@abbreviations.include? measure
+      result = @@abbreviations[measure]
+    elsif @@measures.include? measure
+      result = @@measures[measure]
+    else
+      result = nil
+    end
+    return result
   end
   
   def self.register_measure(klass,quantity,definition)
-    @@measures << klass
+    @@measures[klass.to_s.split("::").last.downcase] = klass
     @@quantities[quantity] ||= []
     @@quantities[quantity] << klass
   end

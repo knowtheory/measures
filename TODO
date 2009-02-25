@@ -1,5 +1,0 @@
-Create two Grammars:
-	One general purpose formula grammar for writing/representing complex units
-	One specific formula grammar where there is no division operator (only *, ** and negative powers)
-
-write translation layer to map 

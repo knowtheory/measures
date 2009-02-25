@@ -1,6 +1,9 @@
 require 'lib/measures'
 
 class Second < Measures::Measure
+  defined_as "duration"
+  abbreviated_as "s"
+  
   DURATIONS = {
     "minute"  => 60,
     "hour"    => 3600,
@@ -14,17 +17,4 @@ class Second < Measures::Measure
     "d"       => "day",
     "a"       => "year"
   }
-  DURATIONS_REGEXP =              Regexp.new(DURATIONS.keys.compact.join("|"))
-  DURATIONS_ABBREVIATED_REGEXP =  Regexp.new(DURATIONS.keys.compact.join("|"))
-  
-  def convert_to(modifier)
-    if DURATIONS_REGEXP =~ modifier or DURATIONS_ABBREVIATED_REGEXP =~ modifier
-      (@value * DURATIONS[@multiple_modifier]) 
-    elsif PREFIX_FULL_REGEXP =~ modifier or PREFIX_ABBREVIATED_REGEXP =~ modifier
-      si_convert_to(modifier)
-    end
-  end
-end
-
-class Celsius < Measures::Measure
 end

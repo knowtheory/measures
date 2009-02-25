@@ -20,7 +20,7 @@ class MinistryOfWeightsAndMeasuresTest < Test::Unit::TestCase
     end
     
     should "factor a definition into it a base definition" do
-      assert_equal "", Ministry.factor("C/V")
+      assert_equal [], Ministry.factor("C/V")
     end
   end
 end

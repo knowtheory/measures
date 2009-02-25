@@ -52,7 +52,7 @@ class DefinitionTest < Test::Unit::TestCase
     should "recognize parenthetical expressions" do
       inputs = ["(m^2)", "(meters)", "(1234)", "(a/b)", "((a)/b)", 
                 "((a/b))", "(a/(b))", "(a/((b)))", "a / (b * c)",
-                "a / (b^3)", "(a/b)^3", "( a / b ) ^ 3"]
+                "a / (b^3)", "(a/b)^3", "( a / b ) ^ 3", "(a^2)^3/4"]
       inputs.each do |expression|
         assert @parser.parse(expression), "parser didn't recognize '#{expression}'"
       end

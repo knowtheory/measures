@@ -1,6 +1,7 @@
 require 'lib/measures'
-require 'lib/measures/metric/base'
-require 'lib/measures/metric/derived'
+require 'common_measures'
+require 'metric/base'
+require 'metric/derived'
 
 module Metric
   MEASURES = {
