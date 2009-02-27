@@ -48,7 +48,7 @@ grammar Definition
 	end
 	
 	rule text
-		[a-zA-Z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
+		([a-zA-Z]+ ".")? [a-zA-Z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
 	end
 
 	rule number

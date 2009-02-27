@@ -2,9 +2,8 @@ $:.push File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'rubygems'
 require 'test/unit'
-require 'lib/measures'
 require 'shoulda'
-require 'lib/measures/metric/metric'
+require 'lib/measures'
 
 class Smoot < Measures::Measure # 1.701 m
   defined_as "distance"

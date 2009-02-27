@@ -1,5 +1,5 @@
-require 'lib/measures'
 require 'common_measures'
+require 'modifiers/named_quantities'
 require 'metric/base'
 require 'metric/derived'
 

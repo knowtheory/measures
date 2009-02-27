@@ -1,8 +1,7 @@
 require 'english/inflect'
 require 'singleton'
 require 'treetop'
-require './lib/measures/measures'
-require './lib/measures/definition/definition'
+require 'definition/definition'
 Treetop.load File.expand_path("./lib/measures/definition/definition")
 
 # # if you don't like the class name, just subclass it, or alias it to something else :)
@@ -131,14 +130,18 @@ class MinistryOfWeightsAndMeasures
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.
   def self.factor(definition)
+    self.clear_tokens!
     tree = self.parse(definition) # get tree, and provide tokens
-    puts "Factoring Definition"
+#    puts "Factoring Definition"
     result = self.tokens.map do |token|
-      puts "TOKEN #{token}"
-      if token =~ /^[A-Za-z]+$/
-        klass = self.identify(token)
-        raise StandardError, "Could not identify a measure for '#{token}'" unless klass
-        "(#{klass.factored_definition})"
+#      puts "TOKEN #{token}"
+      if token =~ /^([A-Za-z]+\.)?[A-Za-z]+$/
+        prefix, identifier = Ministry.tokenize_measure(token)
+        klass = self.identify(identifier)
+        unless klass
+          self.clear_tokens!
+          raise StandardError, "Could not identify a measure for '#{token}'"
+        end
       else
         token
       end
@@ -159,12 +162,27 @@ class MinistryOfWeightsAndMeasures
     @@parser.parse(definition)
   end
   
-  def self.identify(measure)
-    if @@abbreviations.include? measure
-      result = @@abbreviations[measure]
-    elsif @@measures.include? measure
-      result = @@measures[measure]
+  def self.tokenize_measure(measure)
+    if measure =~ /^[A-Za-z]+\.[A-Za-z]+$/
+      prefix, identifier = measure.split(".")
+    elsif measure =~ /^[A-Za-z]+$/
+      prefix = ""
+      identifier = measure
     else
+      puts "WARNING #{measure} is not a valid measure"
+    end
+    return [prefix,identifier]
+  end
+  
+  def self.identify(measure)
+    prefix, identifier = Ministry.tokenize_measure(measure)
+#    puts "Prefix (#{prefix}), and measure (#{identifier})"
+    if @@abbreviations.include? identifier
+      result = @@abbreviations[identifier]
+    elsif @@measures.include? identifier
+      result = @@measures[identifier]
+    else
+      puts "WARNING '#{measure}' could not be identified"
       result = nil
     end
     return result
@@ -181,6 +199,14 @@ class MinistryOfWeightsAndMeasures
     raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
     @@abbreviations[abbreviation] = klass
     self.add_methods_to_core_for(klass)
+  end
+  
+  def self.register_modifier(klass,abbreviation)
+    name = klass.to_s.split("::").last.downcase
+    @@prefixes[name] = klass
+    message =  "#{abbreviation} is already being used, and can't be set as the abbreviation for #{name}"
+    raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
+    @@prefix_abbreviations[abbreviation] = klass
   end
   
   def self.abbreviations
@@ -205,7 +231,7 @@ class MinistryOfWeightsAndMeasures
   end
   
   def self.reset!
-    @@measures                  = []
+    @@measures                  = {}
     @@quantities                = {}
     @@abbreviations             = {} # abbreviation => class
   end

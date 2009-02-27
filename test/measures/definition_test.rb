@@ -17,14 +17,14 @@ class DefinitionTest < Test::Unit::TestCase
       end
     
       should "accept alphabetic strings" do
-        inputs = ["Spike", "Faye", "Ed", "Ein", "haberdashery", "measure"]
+        inputs = ["Spike", "Faye", "Ed", "Ein", "haberdashery", "measure", "prefix.measure"]
         inputs.each do |text|
           assert @parser.parse(text), "parser didn't recognize '#{text}'"
         end
       end
     
       should "reject non-alphanumeric strings" do
-        inputs = %w( ! @ # $ % & [ ] { } | \ : " ; ' < > ? , . ).map do |c| 
+        inputs = %w( ! @ # $ % & [ ] { } | \ : " ; ' < > ? , ).map do |c| 
                 ["words#{c}meaning", "words #{c} meaning"]
         end.flatten
         inputs += ["3.3.3.3.3", "1. 2334", "1 .234", "yay_underscores", "5%", "40$", "word^", "^cake", "1.asdf" ]

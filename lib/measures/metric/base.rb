@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/../measures'
-require File.dirname(__FILE__) + '/../ministry_of_weights_and_measures'
 module Metric
   class Metre < Measures::Measure
     defined_as "distance"

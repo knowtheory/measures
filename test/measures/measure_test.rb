@@ -1,12 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MeasureTest < Test::Unit::TestCase
-
-  def setup
-    @four_kilosmoots = Smoot.new(4,"kilosmoots")
-    @six_decasabers  = Sabre.new(6,"decasabers")
+  
+  should "just pass for now" do
+    assert true
   end
-
 =begin  
   should "represent value as a float internally" do
     assert @measure = Smoot.new(4,"yoctosmoots")

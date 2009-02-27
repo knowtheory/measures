@@ -1,5 +1,3 @@
-require 'lib/measures'
-
 class Second < Measures::Measure
   defined_as "duration"
   abbreviated_as "s"

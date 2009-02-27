@@ -27,7 +27,7 @@ class NamedQuantity # abstract class
     self.instance_variable_set("@exponent", exponent )
     self.instance_variable_set("@abbreviation", abbreviation )
     
-    MinistryOfWeightsAndMeasures.register_modifier(self.to_s, self.abbreviation)
+    MinistryOfWeightsAndMeasures.register_modifier(self, self.abbreviation)
   end
   
   attr_reader :value
@@ -40,23 +40,23 @@ class NamedQuantity # abstract class
   end
 end
 
-class Yocto < NamedQuantity;  set("y", 10, -24);  end
-class Zepto < NamedQuantity;  set("z", 10, -21);  end
-class Atto < NamedQuantity;   set("a", 10, -18);  end
-class Fempto < NamedQuantity; set("f", 10, -15);  end
-class Pico < NamedQuantity;   set("p", 10, -12);  end
-class Nano < NamedQuantity;   set("n", 10, -9);   end
-class Micro < NamedQuantity;  set("μ", 10, -6);   end
-class Milli < NamedQuantity;  set("m", 10, -3);   end
-class Centi < NamedQuantity;  set("c", 10, -2);   end
-class Deci < NamedQuantity;   set("d", 10, -1);   end
-class Deca < NamedQuantity;   set("da", 10, 1);   end
-class Hecto < NamedQuantity;  set("h", 10, 2);    end
-class Kilo < NamedQuantity;   set("k", 10, 3);    end
-class Mega < NamedQuantity;   set("M", 10, 6);    end
-class Giga < NamedQuantity;   set("G", 10, 9);    end
-class Tera < NamedQuantity;   set("T", 10, 12);   end
-class Peta < NamedQuantity;   set("P", 10, 15);   end
-class Exo < NamedQuantity;    set("E", 10, 18);   end
-class Zetta < NamedQuantity;  set("Z", 10, 21);   end
-class Yotta < NamedQuantity;  set("Y", 10, 24);   end
+class Yocto   < NamedQuantity; set("y", 10, -24);  end
+class Zepto   < NamedQuantity; set("z", 10, -21);  end
+class Atto    < NamedQuantity; set("a", 10, -18);  end
+class Fempto  < NamedQuantity; set("f", 10, -15);  end
+class Pico    < NamedQuantity; set("p", 10, -12);  end
+class Nano    < NamedQuantity; set("n", 10, -9);   end
+class Micro   < NamedQuantity; set("μ", 10, -6);   end
+class Milli   < NamedQuantity; set("m", 10, -3);   end
+class Centi   < NamedQuantity; set("c", 10, -2);   end
+class Deci    < NamedQuantity; set("d", 10, -1);   end
+class Deca    < NamedQuantity; set("da", 10, 1);   end
+class Hecto   < NamedQuantity; set("h", 10, 2);    end
+class Kilo    < NamedQuantity; set("k", 10, 3);    end
+class Mega    < NamedQuantity; set("M", 10, 6);    end
+class Giga    < NamedQuantity; set("G", 10, 9);    end
+class Tera    < NamedQuantity; set("T", 10, 12);   end
+class Peta    < NamedQuantity; set("P", 10, 15);   end
+class Exo     < NamedQuantity; set("E", 10, 18);   end
+class Zetta   < NamedQuantity; set("Z", 10, 21);   end
+class Yotta   < NamedQuantity; set("Y", 10, 24);   end

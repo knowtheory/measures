@@ -66,12 +66,17 @@ module Measures
     #   subsequent classes which reference a defined class.
     def defined_as(quantity, definition=self.to_s.split("::").last.downcase)
       # set the class instance variables
-      puts "Definition is #{definition}"
+#      puts "Definition is #{definition}"
       instance_variable_set("@quantity", quantity)
       instance_variable_set("@definition", definition)
       # register class w/ the Ministry of Weights and Measures
       MinistryOfWeightsAndMeasures.register_measure(self,quantity,definition)
-      instance_variable_set("@factored_definition", MinistryOfWeightsAndMeasures.factor(definition) )
+      if self.to_s.split("::").last.downcase == definition
+        factored_definition = definition
+      else
+        factored_definition = MinistryOfWeightsAndMeasures.factor(definition)
+      end
+      instance_variable_set("@factored_definition", factored_definition )
     end
     
     def abbreviated_as(abbreviation)

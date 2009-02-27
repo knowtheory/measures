@@ -1,5 +1,3 @@
-require 'common_measures'
-require 'metric/metric'
 module Metric
 
   class Hertz < Measures::Measure
@@ -18,7 +16,7 @@ module Metric
   end
 
   class Newton < Measures::Measure
-    defined_as "force", "m*kg/s^2"
+    defined_as "force", "m*k.g/s^2"
     abbreviated_as "N"  
   end
 
@@ -98,12 +96,12 @@ module Metric
   end
 
   class Gray < Measures::Measure
-    defined_as "absorbed_dose", "J/kg"
+    defined_as "absorbed_dose", "J/k.g"
     abbreviated_as "Gy"
   end
 
   class Sievert < Measures::Measure
-    defined_as "equivalent_dose", "J/kg"
+    defined_as "equivalent_dose", "J/k.g"
     abbreviated_as "Sv"
   end
 
@@ -113,7 +111,7 @@ module Metric
   end
 
   class Litre < Measures::Measure
-    defined_as "volume", "dm^3"
+    defined_as "volume", "d.m^3"
     abbreviated_as "l"
     aka "liter"
   end
