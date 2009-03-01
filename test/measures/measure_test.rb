@@ -2,8 +2,14 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MeasureTest < Test::Unit::TestCase
   
-  should "just pass for now" do
-    assert true
+  context "Generic Measures" do
+    should "be definable" do
+      assert Measures::Measure.new(25,"sm^2")
+    end
+    
+    should "be equal to a composite of defined measures" do
+      assert_equal (Smoot.new(5) * Smoot.new(5)), Measures::Measure.new(25,"sm*sm")
+    end
   end
 =begin  
   should "represent value as a float internally" do

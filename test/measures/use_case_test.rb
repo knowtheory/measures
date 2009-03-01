@@ -13,6 +13,7 @@ class UseCaseTest < Test::Unit::TestCase
   should "find metric units to be equivalent" do
     assert Ministry.equivalent?("metre","metre")
     assert Ministry.equivalent?("m", "m")
+    assert Ministry.equivalent?("J", "(N*m)")
     assert Ministry.equivalent?("J", "N*m")
     assert Ministry.equivalent?("N*m", "C*V")
     assert Ministry.equivalent?("C*V", "W*s")

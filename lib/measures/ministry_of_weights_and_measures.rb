@@ -1,3 +1,4 @@
+#require 'lib/measures'; require 'metric/metric'
 require 'english/inflect'
 require 'singleton'
 require 'treetop'
@@ -142,6 +143,12 @@ class MinistryOfWeightsAndMeasures
           self.clear_tokens!
           raise StandardError, "Could not identify a measure for '#{token}'"
         end
+        definition = klass.factored_definition
+        if definition =~ /^([A-Za-z]+\.)?[A-Za-z]+$/
+          definition
+        else
+          "(#{definition})"
+        end
       else
         token
       end
@@ -150,17 +157,18 @@ class MinistryOfWeightsAndMeasures
     return result
   end
 
-  # put in a definition, ensures that:
-  #   all the units in the definition are valid
-  #   the definition parses properly
-  def self.validate(definition)
-    result = (not self.parse(definition).nil?)
-    return result
-  end
   
-  def self.parse(definition)
-    @@parser.parse(definition)
-  end
+    # put in a definition, ensures that:
+    #   all the units in the definition are valid
+    #   the definition parses properly
+    def self.validate(definition)
+      result = (not self.parse(definition).nil?)
+      return result
+    end
+  
+    def self.parse(definition)
+      @@parser.parse(definition)
+    end
   
   def self.tokenize_measure(measure)
     if measure =~ /^[A-Za-z]+\.[A-Za-z]+$/
@@ -192,13 +200,14 @@ class MinistryOfWeightsAndMeasures
     @@measures[klass.to_s.split("::").last.downcase] = klass
     @@quantities[quantity] ||= []
     @@quantities[quantity] << klass
+    self.add_methods_to_core_for(klass)
   end
   
   def self.register_measure_abbreviation(klass,abbreviation)
     message =  "#{abbreviation} is already being used, and can't be set as the abbreviation for #{klass.to_s}"
     raise ArgumentError, message if @@abbreviations.keys.include? abbreviation
     @@abbreviations[abbreviation] = klass
-    self.add_methods_to_core_for(klass)
+    self.add_abbreviation_alias_to_core_for(klass,abbreviation)
   end
   
   def self.register_modifier(klass,abbreviation)
@@ -217,13 +226,32 @@ class MinistryOfWeightsAndMeasures
     self.factor(def1) == self.factor(def2)
   end
 
-  def self.add_methods_to_core_for(klass)
+  def self.add_methods_to_core_for(klass,options={})
     raise ArgumentError, "you must supply a valid measure class" unless klass.kind_of? Class
     class_name = klass.to_s
+    class_abbreviation = klass.abbreviation
+    if options[:namespaced]
+      method_name = class_name.split("::").join("_").downcase
+    else
+      method_name = class_name.split("::").last.downcase
+    end
     Numeric.class_eval <<-eval_block
-      def #{class_name.split("::").join("_").downcase.pluralize}
+      def #{method_name}
         #{class_name}.new(self)
       end
+      alias_method "#{method_name.pluralize}".to_sym, "#{method_name}".to_sym
+    eval_block
+  end
+  
+  def self.add_abbreviation_alias_to_core_for(klass, abbreviation,options={})
+    class_name = klass.to_s
+    if options[:namespaced]
+      method_name = class_name.split("::").join("_").downcase
+    else
+      method_name = class_name.split("::").last.downcase
+    end
+    Numeric.class_eval <<-eval_block
+      alias_method "#{abbreviation}".to_sym, "#{method_name}".to_sym
     eval_block
   end
   

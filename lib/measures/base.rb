@@ -154,6 +154,7 @@ module Measures
   end
   
   class Measure
+    attr_accessor :definition, :factored_definition, :value
     # cheating on class variables.
     # Since class variables are shared amongst subclasses
     # we're adding instance variables to the class objects themselves.
@@ -169,6 +170,7 @@ module Measures
       end
       
       @value = value
+      @defintion = definition
     end
   end
 end
