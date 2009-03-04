@@ -9,8 +9,12 @@ the following should be determined to be equal:
 "(second\*ampere)/((((metre\*gram/second^2)\*metre)/second)/ampere)"
 
 ## Solve abbreviation ambiguity
-### iSsue
+### Issue
 5.m.m should equal 5.milli.metres.  Problem is that 5.m could be 5.metres or 5.milli
+
+## Factor all definitions into a form consistent with the Buckingham π theorem.
+### Issue
+Need a reduced form for all measure definitions.  The Buckingham π form seems to be the standard format for it.  Need to still account for some issues like "celcius/seconds" should reduce to "(kelvin+273)/seconds", and then to "(kelvin*seconds^-1) + (273/seconds)"
 
 # Completed
 ## DONE 02/27/09: Definitional Ambiguity Dealt with

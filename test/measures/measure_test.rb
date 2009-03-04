@@ -8,7 +8,8 @@ class MeasureTest < Test::Unit::TestCase
     end
     
     should "be equal to a composite of defined measures" do
-      assert_equal (Smoot.new(5) * Smoot.new(5)), Measures::Measure.new(25,"sm*sm")
+      square_smoots = Smoot.new(5) * Smoot.new(5)
+      assert_equal square_smoots, Measures::Measure.new(25,"sm*sm")
     end
   end
 =begin  

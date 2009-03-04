@@ -1,10 +1,14 @@
 grammar Definition
 	
 	rule expression
-		parenthetical (exponentiation)? (arithmetic_operators expression)? / 
-		(exponentiated / quantity) arithmetic_operators expression / 
+		parenthetical (exponentiation)? (operator_and_operand)? / 
+		(exponentiated / quantity) operator_and_operand / 
 		exponentiated / 
 		quantity
+	end
+	
+	rule operator_and_operand
+		" "* (adders / multipliers / dividers) " "* expression
 	end
 	
 	rule parenthetical
@@ -21,10 +25,6 @@ grammar Definition
 	
 	rule quantity
 		" "* (text / number) " "*
-	end
-	
-	rule arithmetic_operators
-		" "* (adders / multipliers) " "*
 	end
 	
 	rule open_paren
@@ -44,7 +44,11 @@ grammar Definition
 	end
 	
 	rule multipliers
-		"*" <OperatorNode> / "×" <OperatorNode> / "/" <OperatorNode> / "÷" <OperatorNode>
+		"*" <OperatorNode> / "×" <OperatorNode> 
+	end
+	
+	rule dividers
+		"/" <OperatorNode> / "÷" <OperatorNode>
 	end
 	
 	rule text

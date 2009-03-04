@@ -163,6 +163,7 @@ class MinistryOfWeightsAndMeasures
     #   the definition parses properly
     def self.validate(definition)
       result = (not self.parse(definition).nil?)
+      self.clear_tokens!
       return result
     end
   
