@@ -30,6 +30,7 @@ module Definition
       Ministry.tokens << input[interval]
     end
   end 
+  
 end
 
 class DefinitionParser < Treetop::Runtime::CompiledParser

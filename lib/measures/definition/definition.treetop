@@ -8,7 +8,8 @@ grammar Definition
 	end
 	
 	rule operator_and_operand
-		" "* (adders / multipliers / dividers) " "* expression
+		" "* (adders / multipliers ) " "* expression /
+		" "* dividers " "* expression #<DivisionNode>
 	end
 	
 	rule parenthetical

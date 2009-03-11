@@ -127,6 +127,10 @@ class MinistryOfWeightsAndMeasures
   def self.clear_tokens!
     @@tokens = []
   end
+  
+  def self.conversion_factor(current, destination)
+    
+  end
 
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.

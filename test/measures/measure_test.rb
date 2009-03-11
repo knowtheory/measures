@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MeasureTest < Test::Unit::TestCase
   
-  context "Generic Measures" do
+  context "Generic Base Measures" do
     should "be definable" do
       assert Measures::Measure.new(25,"sm^2")
     end
@@ -10,6 +10,22 @@ class MeasureTest < Test::Unit::TestCase
     should "be equal to a composite of defined measures" do
       square_smoots = Smoot.new(5) * Smoot.new(5)
       assert_equal square_smoots, Measures::Measure.new(25,"sm*sm")
+    end
+    
+    should "identify as itself" do
+      assert_equal Smoot.new(5), Smoot.new(5)
+    end
+    
+    should "not identify as someone different" do
+      assert_not_equal Smoot.new(5), Smoot.new(6)
+    end
+    
+    should "identify as other equivalent measures" do
+      assert_equal Smoot.new(5000), Smoot.new(5,"kilo.smoot")
+    end
+    
+    should "be comparable" do
+      assert Smoot.new(5).compatible_with? Smoot.new(6)
     end
   end
 =begin  

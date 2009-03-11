@@ -91,29 +91,23 @@ module Measures
   end
   
   module Conversion
-    def convert_to(destination)
-      
+    def convert_to(definition)
+      modifier = Ministry.conversion_factor(self.definition, definition)
+      self.value * modifier
     end
   end
   
   module Calculation
     
     
-    def +(addend)
+    def +(addend); arithmetic_op(:+,addend) ;end
+    def -(subtractor); arithmetic_op(:-,subtractor); end
+    def arithmetic_op(operation, operand)
       # check measures are compatable
       
       # convert to common base
       
-      # perform subtraction
-      
-    end
-    
-    def -(subtractor)
-      # check measures are compatable
-      
-      # convert to common base
-      
-      # perform subtraction
+      # perform addition
       
     end
     
@@ -128,11 +122,11 @@ module Measures
   
   module Comparitors
     def ==(object)
-      result = self.compatable_with?(object) # result should be false if they're not compatable
-      # do conversion for comparison
+      self.compatible_with?(object) and     # result should be false if they're not compatable
+      self.base_value == object.base_value  # do conversion for comparison
     end
     
-    def compatable_with?(object)
+    def compatible_with?(object)
       self.class.quantity == object.class.quantity or     # if the quantities are named and identical
       self.class.definition == object.class.definition or # or the definitions are the same then yay
       MinistryOfWeightsAndMeasures.factor(self.class.definition) == MinistryOfWeightsAndMeasures.factor(object.class.definition)
