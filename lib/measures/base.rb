@@ -93,7 +93,8 @@ module Measures
   module Conversion
     def convert_to(target)
       if definition == :base
-        
+        definition = self.class.definition
+      end
       modifier = Ministry.conversion_factor(self.definition, definition)
       self.value * modifier
     end
