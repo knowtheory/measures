@@ -91,7 +91,9 @@ module Measures
   end
   
   module Conversion
-    def convert_to(definition)
+    def convert_to(target)
+      if definition == :base
+        
       modifier = Ministry.conversion_factor(self.definition, definition)
       self.value * modifier
     end
@@ -123,7 +125,7 @@ module Measures
   module Comparitors
     def ==(object)
       self.compatible_with?(object) and     # result should be false if they're not compatable
-      self.base_value == object.base_value  # do conversion for comparison
+      self.convert_to(:base) == object.convert_to(:base)  # do conversion for comparison
     end
     
     def compatible_with?(object)

@@ -1,34 +1,57 @@
 require 'treetop'
+=begin
+require 'lib/measures'
+Ministry.parse("a*b").tokens
+Ministry.parse("a/b/c").tokens
+=end
+
 
 module Definition
   include Treetop::Runtime
   
-  class ParenNode < Treetop::Runtime::SyntaxNode
+  class ::Treetop::Runtime::SyntaxNode
+    def tokens(options={})
+      if nonterminal?
+        return elements.map{ |e| e.tokens(options) }.flatten.compact
+      elsif input[interval].empty?
+        return nil
+      else
+        return input[interval]
+      end
+    end
+  end
+  
+  class DefinitionNode < Treetop::Runtime::SyntaxNode
     def initialize(input, interval, elements=nil)
       super(input,interval,elements)
       Ministry.tokens << input[interval]
     end
   end
   
-  class TextNode < Treetop::Runtime::SyntaxNode
+  class DivisionNode < DefinitionNode
     def initialize(input, interval, elements=nil)
       super(input,interval,elements)
-      Ministry.tokens << input[interval]
+    end
+    
+    def exponential_form(options={})
+      ["*", "(", expression.tokens(options), ")", "^", "-1"].flatten
+    end
+    
+    def tokens(options={})
+      super
     end
   end
   
-  class NumericNode < Treetop::Runtime::SyntaxNode
-    def initialize(input, interval, elements=nil)
-      super(input,interval,elements)
-      Ministry.tokens << input[interval]
-    end
+  class ParenNode < DefinitionNode
   end
   
-  class OperatorNode < Treetop::Runtime::SyntaxNode
-    def initialize(input, interval, elements=nil)
-      super(input,interval,elements)
-      Ministry.tokens << input[interval]
-    end
+  class TextNode < DefinitionNode
+  end
+  
+  class NumericNode < DefinitionNode
+  end
+  
+  class OperatorNode < DefinitionNode
   end 
   
 end

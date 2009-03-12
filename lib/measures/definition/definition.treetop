@@ -9,7 +9,7 @@ grammar Definition
 	
 	rule operator_and_operand
 		" "* (adders / multipliers ) " "* expression /
-		" "* dividers " "* expression #<DivisionNode>
+		" "* dividers " "* expression <DivisionNode>
 	end
 	
 	rule parenthetical
