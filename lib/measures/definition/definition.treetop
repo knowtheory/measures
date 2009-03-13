@@ -53,7 +53,12 @@ grammar Definition
 	end
 	
 	rule text
-		([a-zA-Z]+ ".")? [a-zA-Z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
+		(character+ ".")? character+ <TextNode>
+		#([αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµa-zA-Z]+ ".")? [αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµA-Za-z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
+	end
+	
+	rule character
+		[A-Za-z]/"α"/"β"/"γ"/"δ"/"ϛ"/"ϝ"/"ζ"/"η"/"θ"/"ι"/"κ"/"λ"/"μ"/"ν"/"ξ"/"ο"/"π"/"ϙ"/"ρ"/"σ"/"ς"/"τ"/"υ"/"φ"/"χ"/"ψ"/"ω"/"Γ"/"Δ"/'Ϛ'/'Θ'/"Λ"/"Ξ"/"Π"/"Ϙ"/"Σ"/"Υ"/"Φ"/"Ψ"/"Ω"/"Ω"/"µ"
 	end
 
 	rule number

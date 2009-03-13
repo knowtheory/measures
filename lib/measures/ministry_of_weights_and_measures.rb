@@ -1,3 +1,4 @@
+$KCODE = 'u'
 #require 'lib/measures'; require 'metric/metric'
 require 'english/inflect'
 require 'singleton'
@@ -119,32 +120,23 @@ class MinistryOfWeightsAndMeasures
   @@prefix_full_regexp        = Regexp.new(Measures::PREFIX_FULL.keys.compact.join("|"))
   @@prefix_abbreviated_regexp = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 =end  
-
-  def self.tokens
-    @@tokens ||= []
-  end
-  
-  def self.clear_tokens!
-    @@tokens = []
-  end
   
   def self.conversion_factor(current, destination)
-    
+    tree1 = self.factor(current)
+    tree2 = self.factor(destination)
   end
 
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.
   def self.factor(definition)
-    self.clear_tokens!
     tree = self.parse(definition) # get tree, and provide tokens
 #    puts "Factoring Definition"
-    result = self.tokens.map do |token|
+    result = tree.tokens.map do |token|
 #      puts "TOKEN #{token}"
-      if token =~ /^([A-Za-z]+\.)?[A-Za-z]+$/
+      if token =~ /^([A-Za-z]+\.)?[A-Za-z]+$/ # if the token is a measure it needs to be identified
         prefix, identifier = Ministry.tokenize_measure(token)
         klass = self.identify(identifier)
         unless klass
-          self.clear_tokens!
           raise StandardError, "Could not identify a measure for '#{token}'"
         end
         definition = klass.factored_definition
@@ -157,7 +149,6 @@ class MinistryOfWeightsAndMeasures
         token
       end
     end.join
-    self.clear_tokens!
     return result
   end
 
@@ -167,12 +158,13 @@ class MinistryOfWeightsAndMeasures
     #   the definition parses properly
     def self.validate(definition)
       result = (not self.parse(definition).nil?)
-      self.clear_tokens!
       return result
     end
   
     def self.parse(definition)
-      @@parser.parse(definition)
+      result = @@parser.parse(definition)
+      raise ArgumentError, "Definition (#{definition}) is malformed" unless result
+      return result
     end
   
   def self.tokenize_measure(measure)

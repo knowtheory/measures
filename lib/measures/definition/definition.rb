@@ -1,4 +1,5 @@
 require 'treetop'
+#require 'definition.treetop'
 =begin
 require 'lib/measures'
 Ministry.parse("a*b").tokens
@@ -24,7 +25,6 @@ module Definition
   class DefinitionNode < Treetop::Runtime::SyntaxNode
     def initialize(input, interval, elements=nil)
       super(input,interval,elements)
-      Ministry.tokens << input[interval]
     end
   end
   
@@ -46,9 +46,15 @@ module Definition
   end
   
   class TextNode < DefinitionNode
+    def tokens(options={})
+      input[interval]
+    end
   end
   
   class NumericNode < DefinitionNode
+    def tokens(options={})
+      input[interval]
+    end
   end
   
   class OperatorNode < DefinitionNode
