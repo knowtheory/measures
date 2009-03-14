@@ -1,7 +1,7 @@
 grammar Definition
 	
 	rule expression
-		parenthetical (exponentiation)? (operator_and_operand)? / 
+		parenthetical (operator_and_operand)? / 
 		(exponentiated / quantity) operator_and_operand / 
 		exponentiated / 
 		quantity
@@ -13,7 +13,7 @@ grammar Definition
 	end
 	
 	rule parenthetical
-		open_paren expression close_paren
+		open_paren expression close_paren (exponentiation)? <ParentheticalNode>
 	end
 	
 	rule exponentiated # hey look exponents! "m^2", "m^-2"
@@ -53,7 +53,7 @@ grammar Definition
 	end
 	
 	rule text
-		(character+ ".")? character+ <TextNode>
+		(prefix:character+ ".")? measure:character+ <TextNode>
 		#([αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµa-zA-Z]+ ".")? [αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµA-Za-z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
 	end
 	

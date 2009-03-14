@@ -67,14 +67,18 @@ module Measures
     def defined_as(quantity, definition=self.to_s.split("::").last.downcase)
       # set the class instance variables
 #      puts "Definition is #{definition}"
+
+      definition_tree = Ministry.parse(definition)
+      
       instance_variable_set("@quantity", quantity)
-      instance_variable_set("@definition", definition)
+      instance_variable_set("@definition", definition_tree)
       # register class w/ the Ministry of Weights and Measures
-      MinistryOfWeightsAndMeasures.register_measure(self,quantity,definition)
+      # not sure why i'm passing the definition atm :P TODO!!
+      MinistryOfWeightsAndMeasures.register_measure(self,quantity,definition_tree)
       if self.to_s.split("::").last.downcase == definition
-        factored_definition = definition
+        factored_definition = Ministry.parse(definition)
       else
-        factored_definition = MinistryOfWeightsAndMeasures.factor(definition)
+        factored_definition = MinistryOfWeightsAndMeasures.factor(definition_tree)
       end
       instance_variable_set("@factored_definition", factored_definition )
     end

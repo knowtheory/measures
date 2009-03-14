@@ -20,11 +20,17 @@ module Definition
         return input[interval]
       end
     end
+    
+    def flatten
+      input[interval]
+    end
   end
   
   class DefinitionNode < Treetop::Runtime::SyntaxNode
+    attr_accessor :exponent
     def initialize(input, interval, elements=nil)
       super(input,interval,elements)
+      exponent = 1
     end
   end
   
@@ -45,9 +51,20 @@ module Definition
   class ParenNode < DefinitionNode
   end
   
+  class ParentheticalNode < DefinitionNode
+  end
+  
   class TextNode < DefinitionNode
     def tokens(options={})
-      input[interval]
+      if options[:factor]
+        factored_definition.tokens
+      else
+        input[interval]
+      end
+    end
+    
+    def factored_definition
+      Ministry.identify(measure.input[measure.interval]).factored_definition
     end
   end
   

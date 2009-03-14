@@ -129,7 +129,14 @@ class MinistryOfWeightsAndMeasures
   # put in a complex definition and get out a definition in terms
   # of the base units for a measurement system.
   def self.factor(definition)
-    tree = self.parse(definition) # get tree, and provide tokens
+    if definition.is_a? Treetop::Runtime::SyntaxNode
+      tree = definition
+    else
+      tree = Ministry.parse(definition) # get tree, and provide tokens
+    end
+    raise StandardError if tree.is_a? String
+    Ministry.parse(tree.tokens(:factor=>true).join)
+=begin
 #    puts "Factoring Definition"
     result = tree.tokens.map do |token|
 #      puts "TOKEN #{token}"
@@ -150,6 +157,7 @@ class MinistryOfWeightsAndMeasures
       end
     end.join
     return result
+=end
   end
 
   
@@ -170,7 +178,7 @@ class MinistryOfWeightsAndMeasures
   def self.tokenize_measure(measure)
     if measure =~ /^[A-Za-z]+\.[A-Za-z]+$/
       prefix, identifier = measure.split(".")
-    elsif measure =~ /^[A-Za-z]+$/
+    elsif measure =~ /^[A-Za-zαβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµ]+$/
       prefix = ""
       identifier = measure
     else
