@@ -1,10 +1,7 @@
 grammar Definition
 	
 	rule expression
-		parenthetical (operator_and_operand)? / 
-		(exponentiated / quantity) operator_and_operand / 
-		exponentiated / 
-		quantity
+		(parenthetical / quantity) (exponentiation)? (operator_and_operand)?
 	end
 	
 	rule operator_and_operand
@@ -13,11 +10,7 @@ grammar Definition
 	end
 	
 	rule parenthetical
-		open_paren expression close_paren (exponentiation)? <ParentheticalNode>
-	end
-	
-	rule exponentiated # hey look exponents! "m^2", "m^-2"
-		quantity exponentiation
+		open_paren expression close_paren <ParentheticalNode>
 	end
 	
 	rule exponentiation
@@ -58,7 +51,7 @@ grammar Definition
 	end
 	
 	rule character
-		[A-Za-z]/"α"/"β"/"γ"/"δ"/"ϛ"/"ϝ"/"ζ"/"η"/"θ"/"ι"/"κ"/"λ"/"μ"/"ν"/"ξ"/"ο"/"π"/"ϙ"/"ρ"/"σ"/"ς"/"τ"/"υ"/"φ"/"χ"/"ψ"/"ω"/"Γ"/"Δ"/'Ϛ'/'Θ'/"Λ"/"Ξ"/"Π"/"Ϙ"/"Σ"/"Υ"/"Φ"/"Ψ"/"Ω"/"Ω"/"µ"
+		[A-Za-z]/"∂"/"∆"/"α"/"β"/"γ"/"δ"/"ϛ"/"ϝ"/"ζ"/"η"/"θ"/"ι"/"κ"/"λ"/"μ"/"ν"/"ξ"/"ο"/"π"/"ϙ"/"ρ"/"σ"/"ς"/"τ"/"υ"/"φ"/"χ"/"ψ"/"ω"/"Γ"/"Δ"/'Ϛ'/'Θ'/"Λ"/"Ξ"/"Π"/"Ϙ"/"Σ"/"Υ"/"Φ"/"Ψ"/"Ω"/"Ω"/"µ"
 	end
 
 	rule number

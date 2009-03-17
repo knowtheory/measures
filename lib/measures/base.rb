@@ -2,61 +2,6 @@ require 'english/inflect'
 
 module Measures
 
-=begin
-  unless Measures.const_defined? :PREFIX_FULL
-  PREFIX_FULL = 
-  {  # definition of prefixes as powers of 10
-    "yocto"   => -24,
-    "zepto"   => -21,
-    "atto"    => -18,
-    "fempto"  => -15,
-    "pico"    => -12,
-    "nano"    => -9, 
-    "micro"   => -6, 
-    "milli"   => -3, 
-    "centi"   => -2, 
-    "deci"    => -1, 
-    "base"    => 0,
-    "deca"    => 1,  
-    "hecto"   => 2,  
-    "kilo"    => 3,  
-    "mega"    => 6,  
-    "giga"    => 9,  
-    "tera"    => 12, 
-    "peta"    => 15, 
-    "exo"     => 18, 
-    "zetta"   => 21, 
-    "yotta"   => 24, 
-  }
-  end
-  
-  unless Measures.const_defined? :PREFIX_ABBREVIATED
-  PREFIX_ABBREVIATED = 
-  {
-    "y"  => "yocto",
-    "z"  => "zepto",
-    "a"  => "atto",
-    "f"  => "fempto",
-    "p"  => "pico",
-    "n"  => "nano",
-    "mu" => "micro",
-    "μ"  => "micro",
-    "m"  => "milli",
-    "c"  => "centi",
-    "d"  => "deci",
-    "da" => "deca",
-    "h"  => "hecto",
-    "k"  => "kilo",
-    "M"  => "mega",
-    "G"  => "giga",
-    "T"  => "tera",
-    "P"  => "peta",
-    "E"  => "exo",
-    "Z"  => "zetta",
-    "Y"  => "yotta",
-  }
-  end
-=end
   module MeasureProperties
     attr_reader :quantity, :definition, :factored_definition, :abbreviation, :aliases
     

@@ -24,15 +24,38 @@ module Definition
     def flatten
       input[interval]
     end
+    
+    def distribute_exponent(exponent)
+      elements.each{ |e| e.distribute_exponent(exponent) }
+    end
   end
   
   class DefinitionNode < Treetop::Runtime::SyntaxNode
-    attr_accessor :exponent
     def initialize(input, interval, elements=nil)
       super(input,interval,elements)
-      exponent = 1
     end
   end
+  
+  class QuantityNode < DefinitionNode
+    def exponent
+      @exponent ||= 1
+      return @exponent
+    end
+    
+    def exponent=(value)
+      @exponent = value
+    end
+    
+    def initialize(input, interval, elements=nil)
+      super(input,interval,elements)
+    end
+  end
+  
+  class ParenNode < DefinitionNode
+  end
+
+  class OperatorNode < DefinitionNode
+  end 
   
   class DivisionNode < DefinitionNode
     def initialize(input, interval, elements=nil)
@@ -40,21 +63,22 @@ module Definition
     end
     
     def exponential_form(options={})
-      ["*", "(", expression.tokens(options), ")", "^", "-1"].flatten
+      ["*", "(", "(", expression.tokens(options), ")", "^", "-1", ")"].flatten
     end
     
     def tokens(options={})
-      super
+      if options[:factor]
+        exponential_form(options)
+      else
+        super
+      end
     end
   end
   
-  class ParenNode < DefinitionNode
+  class ParentheticalNode < QuantityNode
   end
   
-  class ParentheticalNode < DefinitionNode
-  end
-  
-  class TextNode < DefinitionNode
+  class TextNode < QuantityNode
     def tokens(options={})
       if options[:factor]
         factored_definition.tokens
@@ -68,14 +92,11 @@ module Definition
     end
   end
   
-  class NumericNode < DefinitionNode
+  class NumericNode < QuantityNode
     def tokens(options={})
       input[interval]
     end
   end
-  
-  class OperatorNode < DefinitionNode
-  end 
   
 end
 

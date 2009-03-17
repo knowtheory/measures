@@ -121,6 +121,12 @@ class MinistryOfWeightsAndMeasures
   @@prefix_abbreviated_regexp = Regexp.new(Measures::PREFIX_ABBREVIATED.keys.compact.join("|"))
 =end  
   
+  def self.equivalent?(def1,def2)
+    tree1 = def1.kind_of?(Treetop::Runtime::SyntaxNode) ? def1 : self.factor(def1)
+    tree2 = def2.kind_of?(Treetop::Runtime::SyntaxNode) ? def2 : self.factor(def2)
+    tree1.flatten == tree2.flatten
+  end
+  
   def self.conversion_factor(current, destination)
     tree1 = self.factor(current)
     tree2 = self.factor(destination)
@@ -135,32 +141,10 @@ class MinistryOfWeightsAndMeasures
       tree = Ministry.parse(definition) # get tree, and provide tokens
     end
     raise StandardError if tree.is_a? String
+    # TODO It'd be nice if this didn't require a second parse.
     Ministry.parse(tree.tokens(:factor=>true).join)
-=begin
-#    puts "Factoring Definition"
-    result = tree.tokens.map do |token|
-#      puts "TOKEN #{token}"
-      if token =~ /^([A-Za-z]+\.)?[A-Za-z]+$/ # if the token is a measure it needs to be identified
-        prefix, identifier = Ministry.tokenize_measure(token)
-        klass = self.identify(identifier)
-        unless klass
-          raise StandardError, "Could not identify a measure for '#{token}'"
-        end
-        definition = klass.factored_definition
-        if definition =~ /^([A-Za-z]+\.)?[A-Za-z]+$/
-          definition
-        else
-          "(#{definition})"
-        end
-      else
-        token
-      end
-    end.join
-    return result
-=end
   end
 
-  
     # put in a definition, ensures that:
     #   all the units in the definition are valid
     #   the definition parses properly
@@ -178,7 +162,7 @@ class MinistryOfWeightsAndMeasures
   def self.tokenize_measure(measure)
     if measure =~ /^[A-Za-z]+\.[A-Za-z]+$/
       prefix, identifier = measure.split(".")
-    elsif measure =~ /^[A-Za-zαβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµ]+$/
+    elsif measure =~ /^[A-Za-zαβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµπ∂∆]+$/
       prefix = ""
       identifier = measure
     else
@@ -226,10 +210,6 @@ class MinistryOfWeightsAndMeasures
   def self.abbreviations
     @@abbreviations
   end
-  
-  def self.equivalent?(def1,def2)
-    self.factor(def1) == self.factor(def2)
-  end
 
   def self.add_methods_to_core_for(klass,options={})
     raise ArgumentError, "you must supply a valid measure class" unless klass.kind_of? Class
@@ -260,7 +240,21 @@ class MinistryOfWeightsAndMeasures
     eval_block
   end
   
+  def self.unregister_measure(klass)
+    
+  end
+  
   def self.remove_methods_from_core_for(klass)
+    if options[:namespaced]
+      method_name = klass.split("::").join("_").downcase
+    else
+      method_name = klass.split("::").last.downcase
+    end
+    Numeric.class_eval <<-eval_block
+      undef_method :#{klass.abbreviation}
+      undef_method :#{method_name.pluralize}
+      undef_method :#{method_name}
+    eval_block
   end
   
   def self.reset!

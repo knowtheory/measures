@@ -1,3 +1,4 @@
+require 'common_measures'
 module Metric
 
   class Hertz < Measures::Measure

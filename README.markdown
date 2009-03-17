@@ -6,11 +6,11 @@ My goal for measures is type checking for measurement units, and safe accurate c
 
 # Sample goals
 
->> 4.kilometres # => returns a Metre object w/ value 4 kilometres
+>> 4.kilo.metres # => returns a Metre object w/ value 4 kilometres
 
->> 4.kilometres.convert_to("meters") # => returns a Metre object w/ value 4000 metres
+>> 4.kilo.metres.convert_to("meters") # => returns a Metre object w/ value 4000 metres
 
->> 4.kilometres.convert_to("meters") / 20.seconds # => returns a ComplexMeasure object w/ value 200 metres per second
+>> 4.kilo.metres.convert_to("meters") / 20.seconds # => returns a ComplexMeasure object w/ value 200 metres per second
 
 # Gotchas
 
