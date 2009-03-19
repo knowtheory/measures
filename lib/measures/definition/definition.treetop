@@ -1,52 +1,44 @@
 grammar Definition
 	
 	rule expression
-		(parenthetical / quantity) (exponentiation)? (operator_and_operand)?
+		quantity (op_and_arg)? <ExpressionNode>
 	end
 	
-	rule operator_and_operand
-		" "* (adders / multipliers ) " "* expression /
-		" "* dividers " "* expression <DivisionNode>
+	rule op_and_arg
+		operator expression <OpArgNode>
 	end
 	
-	rule parenthetical
-		open_paren expression close_paren <ParentheticalNode>
-	end
-	
-	rule exponentiation
-		" "* exponent_operators " "* quantity
+	rule operator
+		"+" <OperatorNode> / 
+		"-" <OperatorNode> / 
+		"*" <OperatorNode> / 
+		"/" <OperatorNode> / 
+		"×" <OperatorNode> / 
+		"÷" <OperatorNode>
 	end
 	
 	rule quantity
-		" "* (text / number) " "*
+		[\s]* (parenthetical / basic_quantity) (exponentiation)? [\s]* <QuantityNode>
 	end
 	
-	rule open_paren
-		" "* "(" " "* <ParenNode>
+	rule parenthetical
+		"(" expression ")" <ParentheticalNode>
 	end
 	
-	rule close_paren
-		" "* ")" " "* <ParenNode>
+	rule exponentiation
+		[\s]* operator:("^" / "**") [\s]* basic_quantity <ExponentNode>
 	end
 	
-	rule exponent_operators
-		"^" <OperatorNode> / "**" <OperatorNode>
+	rule basic_quantity
+		(text / number)
 	end
-	
-	rule adders
-		"+" <OperatorNode> / "-" <OperatorNode>
-	end
-	
-	rule multipliers
-		"*" <OperatorNode> / "×" <OperatorNode> 
-	end
-	
-	rule dividers
-		"/" <OperatorNode> / "÷" <OperatorNode>
+
+	rule number
+		"-"? [\s]* [0-9]+ "."? [0-9]* <NumericNode>
 	end
 	
 	rule text
-		(prefix:character+ ".")? measure:character+ <TextNode>
+		( modifier:(character+) "." )? measure:character+ <TextNode>
 		#([αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµa-zA-Z]+ ".")? [αβγδϛϝζηθικλμνξοπϙρσςτυφχψωΓΔϚΘΛΞΠϘΣΥΦΨΩΩµA-Za-z]+ <TextNode> # outlawing underscores. just add it to the character class to renable.
 	end
 	
@@ -54,7 +46,4 @@ grammar Definition
 		[A-Za-z]/"∂"/"∆"/"α"/"β"/"γ"/"δ"/"ϛ"/"ϝ"/"ζ"/"η"/"θ"/"ι"/"κ"/"λ"/"μ"/"ν"/"ξ"/"ο"/"π"/"ϙ"/"ρ"/"σ"/"ς"/"τ"/"υ"/"φ"/"χ"/"ψ"/"ω"/"Γ"/"Δ"/'Ϛ'/'Θ'/"Λ"/"Ξ"/"Π"/"Ϙ"/"Σ"/"Υ"/"Φ"/"Ψ"/"Ω"/"Ω"/"µ"
 	end
 
-	rule number
-		"-"? " "* [0-9]+ "."? [0-9]* <NumericNode>
-	end
 end

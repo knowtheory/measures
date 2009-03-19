@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'common_measures'
 module Metric
 

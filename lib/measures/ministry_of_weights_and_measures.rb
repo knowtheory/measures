@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 $KCODE = 'u'
 #require 'lib/measures'; require 'metric/metric'
 require 'english/inflect'

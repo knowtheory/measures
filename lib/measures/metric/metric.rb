@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'common_measures'
 require 'modifiers/named_quantities'
 require 'metric/base'

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # This class is an abstract class for proxy objects used by measures.
 #
