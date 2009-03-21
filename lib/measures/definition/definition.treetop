@@ -18,7 +18,7 @@ grammar Definition
 	end
 	
 	rule quantity
-		[\s]* (parenthetical / basic_quantity) (exponentiation)? [\s]* <QuantityNode>
+		[\s]* value:(parenthetical / basic_quantity) [\s]* (exponentiation)? [\s]* <QuantityNode>
 	end
 	
 	rule parenthetical
@@ -26,7 +26,7 @@ grammar Definition
 	end
 	
 	rule exponentiation
-		[\s]* operator:("^" / "**") [\s]* basic_quantity <ExponentNode>
+		operator:("^" / "**") [\s]* basic_quantity <ExponentNode>
 	end
 	
 	rule basic_quantity

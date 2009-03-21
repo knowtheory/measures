@@ -6,7 +6,7 @@ class MeasureTest < Test::Unit::TestCase
     should "be definable" do
       assert Measures::Measure.new(25,"sm^2")
     end
-    
+=begin    
     should "be equal to a composite of defined measures" do
       square_smoots = Smoot.new(5) * Smoot.new(5)
       assert_equal square_smoots, Measures::Measure.new(25,"sm*sm")
@@ -23,7 +23,7 @@ class MeasureTest < Test::Unit::TestCase
     should "identify as other equivalent measures" do
       assert_equal Smoot.new(5000), Smoot.new(5,"kilo.smoot")
     end
-    
+=end    
     should "be comparable" do
       assert Smoot.new(5).compatible_with? Smoot.new(6)
     end

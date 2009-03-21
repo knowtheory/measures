@@ -9,7 +9,7 @@ class UseCaseTest < Test::Unit::TestCase
   should "provide measure creation methods on numeric classes" do
     assert true
   end
-  
+=begin  
   should "find metric units to be equivalent" do
     assert Ministry.equivalent?("metre","metre")
     assert Ministry.equivalent?("m", "m")
@@ -24,4 +24,5 @@ class UseCaseTest < Test::Unit::TestCase
     assert Ministry.equivalent?("F", "(s*s*A*A)/J")
     assert Ministry.equivalent?("F", "(s^2*A^2)/J")
   end
+=end
 end
