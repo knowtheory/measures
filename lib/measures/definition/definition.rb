@@ -51,11 +51,13 @@ module Definition
   class OpArgNode < DefinitionNode
     def tokens(options={})
       #pp options
-      if options[:normalize]
-        op = operator.tokens(options)
-        [op] + expression.tokens(options.merge({:operator=>op}))
+      op = operator.tokens
+      if options[:normalize] and op =~ /\/|÷/
+        exp = options[:exponent]
+        exp ||= 1
+        ["*"] + expression.tokens(options.merge({:exponent=>-1*exp}))
       else
-        [operator.tokens(options)] + expression.tokens(options)
+        super
       end
     end
   end
@@ -109,7 +111,12 @@ module Definition
         exp = exponent * options[:exponent]
       end
       if options[:normalize]
-        ["(", expression.tokens(options.merge(:exponent => exp)), ")"].flatten
+        children = expression.tokens(options.merge(:exponent => exp))
+        unless children.include? "-" or children.include?("+")
+          children
+        else
+          ["(", children, ")"].flatten
+        end
       else
         super
       end
@@ -128,7 +135,7 @@ module Definition
       
       if options[:normalize]
         if options[:exponent] and options[:exponent] != 1
-          token_store = [token_store, "^", "#{exponent * options[:exponent]}"].flatten
+          token_store = [token_store + "^" + "#{exponent * options[:exponent]}"].flatten
         else
           token_store
         end

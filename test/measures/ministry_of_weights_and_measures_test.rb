@@ -32,17 +32,36 @@ class MinistryOfWeightsAndMeasuresTest < Test::Unit::TestCase
       end
     end
     
-    should "simplify nested exponents" do
-      assert_equal "(m^2.0)", Ministry.parse("(m)^2").normalize.join
-      assert_equal "(m^-2.0)", Ministry.parse("(m)^-2").normalize.join
-      assert_equal "(m^2.0+n^2.0)", Ministry.parse("(m + n)^2").normalize.join
-      assert_equal "(m^6.0+n^6.0)", Ministry.parse("(m^3 + n^3)^2").normalize.join
-      assert_equal "((m^8.0))", Ministry.parse("((m^2)**2)^2").normalize.join
-      assert_equal "(a^-3.0-b^-3.0-c^-3.0)", Ministry.parse("(a-b-c)**-3").normalize.join
+    context "Associativity" do
+      should "simplify nested exponents" do
+        assert_equal "m^2.0", Ministry.parse("(m)^2").normalize.join
+        assert_equal "m^-2.0", Ministry.parse("(m)^-2").normalize.join
+        assert_equal "(m^2.0+n^2.0)", Ministry.parse("(m + n)^2").normalize.join
+        assert_equal "(m^6.0+n^6.0)", Ministry.parse("(m^3 + n^3)^2").normalize.join
+        assert_equal "m^8.0", Ministry.parse("((m^2)**2)^2").normalize.join
+        assert_equal "(a^-3.0-b^-3.0-c^-3.0)", Ministry.parse("(a-b-c)**-3").normalize.join
+      end
+      
+      should "distribute multipliers" do
+        assert_equal "a*b+a*c", Ministry.parse("a*(b+c)").normalize.join
+        assert_equal "a*b*c+a*b*d", Ministry.parse("a*b*(c+d)").normalize.join
+      end
     end
     
     should "invert division via negative exponents" do
-      assert_equal "a*b^-1", Ministry.parse("a/b").normalize
+      assert_equal "a*b^-1", Ministry.parse("a/b").normalize.join
+      assert_equal "a*b^-2.0", Ministry.parse("a/b^2").normalize.join
+      assert_equal "a^-1.0*b", Ministry.parse("(a/b)^-1").normalize.join
+    end
+    
+    should "get rid of optional parentheses" do
+      assert_equal "a", Ministry.parse("(a)").normalize.join
+      assert_equal "a+b", Ministry.parse("(a+b)").normalize.join
+      assert_equal "a/b", Ministry.parse("a/(b)").normalize.join
+    end
+    
+    should "observe commutativity" do
+      assert_equal Ministry.parse("(a/b)").normalize.join, Ministry.parse("(b/a)^-1").normalize.join
     end
   end
 end
