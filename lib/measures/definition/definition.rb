@@ -92,16 +92,24 @@ module Definition
 
   class ExpressionNode < QuantityNode
     def tokens(options={})
+      exp = exponent
+      unless options[:exponent].nil?
+        exp = exponent * options[:exponent]
+      end
       #pp options
-      return elements.map{ |e| e.tokens(options) }.flatten.compact
+      return elements.map{ |e| e.tokens(options.merge(:exponent => exp)) }.flatten.compact
     end
   end
   
   class ParentheticalNode < QuantityNode
     def tokens(options={})
       #pp options
+      exp = exponent
+      unless options[:exponent].nil?
+        exp = exponent * options[:exponent]
+      end
       if options[:normalize]
-        ["(", expression.tokens(options), ")"].flatten
+        ["(", expression.tokens(options.merge(:exponent => exp)), ")"].flatten
       else
         super
       end
@@ -119,7 +127,7 @@ module Definition
       end
       
       if options[:normalize]
-        if options[:exponent] and options[:exponent] > 1
+        if options[:exponent] and options[:exponent] != 1
           token_store = [token_store, "^", "#{exponent * options[:exponent]}"].flatten
         else
           token_store
@@ -138,7 +146,7 @@ module Definition
     def tokens(options={})
       #puts options
       if options[:normalize]
-        if options[:exponent] and options[:exponent] > 1
+        if options[:exponent] and options[:exponent] != 1
           [input[interval], "^", "#{exponent * options[:exponent]}"].flatten
         else
           input[inteval]

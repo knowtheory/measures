@@ -34,10 +34,15 @@ class MinistryOfWeightsAndMeasuresTest < Test::Unit::TestCase
     
     should "simplify nested exponents" do
       assert_equal "(m^2.0)", Ministry.parse("(m)^2").normalize.join
+      assert_equal "(m^-2.0)", Ministry.parse("(m)^-2").normalize.join
       assert_equal "(m^2.0+n^2.0)", Ministry.parse("(m + n)^2").normalize.join
       assert_equal "(m^6.0+n^6.0)", Ministry.parse("(m^3 + n^3)^2").normalize.join
       assert_equal "((m^8.0))", Ministry.parse("((m^2)**2)^2").normalize.join
       assert_equal "(a^-3.0-b^-3.0-c^-3.0)", Ministry.parse("(a-b-c)**-3").normalize.join
+    end
+    
+    should "invert division via negative exponents" do
+      assert_equal "a*b^-1", Ministry.parse("a/b").normalize
     end
   end
 end
