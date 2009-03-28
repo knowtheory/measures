@@ -5,7 +5,7 @@ require 'english/inflect'
 require 'singleton'
 require 'treetop'
 require 'definition/definition'
-Treetop.load File.expand_path("./lib/measures/definition/definition")
+Treetop.load File.join(File.dirname(__FILE__), 'definition/definition')
 
 # # if you don't like the class name, just subclass it, or alias it to something else :)
 # i've already stuck it in Ministry for my convenience

@@ -1,7 +1,7 @@
 grammar Definition
 	
 	rule expression
-		quantity (op_and_arg)? <ExpressionNode>
+		(quantity op_and_arg) <ExpressionNode> / quantity
 	end
 	
 	rule op_and_arg

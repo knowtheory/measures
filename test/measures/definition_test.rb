@@ -5,7 +5,7 @@ require 'treetop'
 class DefinitionTest < Test::Unit::TestCase
   context "Definition Grammar" do
     setup do
-      Treetop.load File.expand_path("./lib/measures/definition/definition")
+      Treetop.load File.join(File.dirname(__FILE__), "..", "..", "lib", "definition/definition")
       @parser = DefinitionParser.new
     end
     

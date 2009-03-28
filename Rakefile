@@ -1,36 +1,47 @@
 require 'rubygems'
 require 'rake/gempackagetask'
+require 'rubygems/specification'
+require 'date'
 
-GEM_NAME = "Measures"
+GEM = "measures"
+GEM_VERSION = "0.0.1"
 AUTHOR = "Ted Han"
-EMAIL = "gems@skein.us"
-HOMEPAGE = "http://github.com/knowtheory/measures"
-SUMMARY = "Scientific measurement & unit conversion library."
-GEM_VERSION = "0.1"
+EMAIL = "measures@knowtheory.net"
+HOMEPAGE = "http://measures.knowtheory.net" #doesn't exist yet :P
+SUMMARY = "A minimally invasive measurement library"
 
 spec = Gem::Specification.new do |s|
-#  s.rubyforge_project = "measures"
-  s.name = GEM_NAME
+  s.name = GEM
   s.version = GEM_VERSION
   s.platform = Gem::Platform::RUBY
-#  s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE"]
+  s.has_rdoc = true
+  s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
   s.summary = SUMMARY
   s.description = s.summary
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
+  
+  # Uncomment this to add a dependency
+  # s.add_dependency "foo"
+  
   s.require_path = 'lib'
-  s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,test}/**/*")
+  s.autorequire = GEM
+  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,test}/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
 end
 
-desc "Create a gemspec file"
-task :gemspec do
-  File.open("#{GEM_NAME}.gemspec", "w") do |file|
+desc "install the gem locally"
+task :install => [:package] do
+  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION}}
+end
+
+desc "create a gemspec file"
+task :make_spec do
+  File.open("#{GEM}.gemspec", "w") do |file|
     file.puts spec.to_ruby
   end
 end

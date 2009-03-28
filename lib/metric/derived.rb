@@ -80,8 +80,7 @@ module Metric
   class Celcius < Measures::Measure
     defined_as "temperature", "K - 273.15"
     abbreviated_as "°C"
-    
-    @@unit_alias    = {:abbreviation => "C", :aliases => ["centigrade"]}
+    @@unit_alias    = {:abbreviation => "°C", :aliases => ["centigrade"]}
   end
 
   class Lumen < Measures::Measure

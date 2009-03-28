@@ -1,46 +1,41 @@
 # -*- coding: utf-8 -*-
 require 'treetop'
 #require 'lib/measures'; require 'metric/metric'
-module Definition
-  include Treetop::Runtime
-  
-  class ::Treetop::Runtime::SyntaxNode
+module TreetopExt
     def tokens(options={})
       #pp options
       if nonterminal?
         return elements.map{ |e| e.tokens(options) }.flatten.compact
-      elsif input[interval].empty?
+      elsif input[interval].empty? or input[interval] =~ /\s+/
         return nil
       else
         return input[interval]
       end
     end
-    
+
     def flatten
       input[interval]
     end
-    
+
     def normalize(options={})
-      tokens(options.merge({:normalize=>true}))
+      tokens(options.merge({:normalize=>true,:distribute=>true,:simplify=>true}))
     end
-    
+
     def factor(options={})
-      tokens(options.merge({:factor=>true}))
+      normalize(options.merge(:factor=>true))
     end
-  end
-  
+end
+
+class Treetop::Runtime::SyntaxNode
+  include TreetopExt
+end
+
+module Definition
+  include Treetop::Runtime
+    
   class DefinitionNode < ::Treetop::Runtime::SyntaxNode; end
   
-  class OperatorNode < DefinitionNode
-    def tokens(options={})
-      #pp options
-      if options[:normalize] and (input[interval] =~ /\s*(\/|÷)\s*/)
-        "*"
-      else
-        super
-      end
-    end
-  end
+  class OperatorNode < DefinitionNode; end
   
   class ExponentNode < DefinitionNode
     def value
@@ -55,13 +50,22 @@ module Definition
       if options[:normalize] and op =~ /\/|÷/
         exp = options[:exponent]
         exp ||= 1
-        ["*"] + expression.tokens(options.merge({:exponent=>-1*exp}))
+        ["*"] + [expression.tokens(options.merge({:exponent=>-1*exp}))].flatten.compact
       else
         super
       end
     end
   end
     
+  class ExpressionNode < DefinitionNode
+  end
+  
+  #
+  # QuantityNodes are the base type for anything that has a value.
+  # This includes basic quantities (strings or numbers) complex expressions
+  # and parenthetical expressions.
+  #
+  # Quantities can have exponents
   class QuantityNode < DefinitionNode
     attr_accessor :exponent
     def initialize(input,interval,elements)
@@ -82,24 +86,13 @@ module Definition
       end
       
       case 
-      when (nonterminal? and options[:normalize])
-        value.tokens(options.merge(:exponent => exp))
-      when nonterminal?
-        super(options.merge(:exponent => exp))
-      else
-        input[interval]
+        when (nonterminal? and options[:distribute])
+          value.tokens(options.merge(:exponent => exp))
+        when nonterminal?
+          super(options.merge(:exponent => exp))
+        else
+          input[interval]
       end
-    end
-  end
-
-  class ExpressionNode < QuantityNode
-    def tokens(options={})
-      exp = exponent
-      unless options[:exponent].nil?
-        exp = exponent * options[:exponent]
-      end
-      #pp options
-      return elements.map{ |e| e.tokens(options.merge(:exponent => exp)) }.flatten.compact
     end
   end
   
@@ -110,15 +103,15 @@ module Definition
       unless options[:exponent].nil?
         exp = exponent * options[:exponent]
       end
-      if options[:normalize]
-        children = expression.tokens(options.merge(:exponent => exp))
-        unless children.include? "-" or children.include?("+")
-          children
+
+      children = expression.tokens(options.merge(:exponent => exp))
+      case
+        when (options[:simplify] and parent.parent.is_a? ExpressionNode)
+          children.flatten
+        when (options[:simplify] and not (children.include?("-") or children.include?("+") or options[:exponent] != 1))
+          children.flatten
         else
           ["(", children, ")"].flatten
-        end
-      else
-        super
       end
     end
   end
@@ -126,21 +119,11 @@ module Definition
   class TextNode < QuantityNode
     def tokens(options={})
       #pp [self, options]
-      token_store = []
-      if options[:factor]
-        token_store = factored_definition.tokens
+      token_store = options[:factor] ? factored_definition.tokens : input[interval]
+      if options[:distribute] and options[:exponent] != 1
+        return [token_store + "^" + "#{exponent * options[:exponent]}"].flatten
       else
-        token_store = input[interval]
-      end
-      
-      if options[:normalize]
-        if options[:exponent] and options[:exponent] != 1
-          token_store = [token_store + "^" + "#{exponent * options[:exponent]}"].flatten
-        else
-          token_store
-        end
-      else
-        token_store
+        return token_store
       end
     end
     
@@ -152,12 +135,8 @@ module Definition
   class NumericNode < QuantityNode
     def tokens(options={})
       #puts options
-      if options[:normalize]
-        if options[:exponent] and options[:exponent] != 1
-          [input[interval], "^", "#{exponent * options[:exponent]}"].flatten
-        else
-          input[inteval]
-        end
+      if options[:distribute] and options[:exponent] != 1
+        [input[interval], "^", "#{exponent * options[:exponent]}"].flatten
       else
         input[interval]
       end
